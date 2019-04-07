@@ -85,13 +85,14 @@ def grid(request):
    r=()
 # if(st>dst and st<dst ):
 #   print("success")
-
+   for item in result:
+    a=a+(item[0],)
    for item in res:
+
     if((timest>=item[1].time() and timest<=item[2].time()) or (timeet>=item[1].time() and timeet<=item[2].time())):
      o=o+(item[0],)
-     a=a+(item[0],)
-    else:
-     a=a+(item[0],)
+     
+    
    a=tuple(set(a))
    o=tuple(set(o))
    print("aaa",a)
