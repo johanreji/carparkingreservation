@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="{% static 'signup.css' %}"/>
+	  
+    </head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<body style="background-color:#B23131;">
+<div style="margin:200px auto; height:300px; width:30%; background-color:white;border-radius:20px;">
+<img src="{% static 'logo.png' %}" style=" width:50%; height:auto; margin:auto; display:block;">
+<button onclick="document.getElementById('id02').style.display='block'" style="width:90%; display:block; margin:20px auto;">Sign Up</button>
+<button onclick="document.getElementById('id01').style.display='block'" style="width:90%; display:block; margin:20px auto;">Sign In</button>
+</div>
+<div id="id02" class="modal">
+  <span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close Modal">&times;</span>
+  <form class="modal-content" method="POST" action="/register/register/">
+	{% csrf_token %}
+    <div class="container">
+      <h1>Sign Up</h1>
+      <p>Please fill in this form to create an account.</p>
+      <hr>
+      <label for="email"><b>Email</b></label>
+      <input  type="text" placeholder="Enter Email" name="email" required>
+
+      <label for="psw"><b>Password</b></label>
+      <input id="password" type="password" placeholder="Enter Password" name="psw" required>
+
+      <label for="psw-repeat"><b>Repeat Password</b></label>
+      <input id="confirm_password" type="password" placeholder="Repeat Password" name="psw-repeat" required onchange='check_pass();'>
+     
+
+     
+
+      <div class="clearfix">
+        <button type="button" onclick="document.getElementById('id02').style.display='none'" class="cancelbtn">Cancel</button>
+        <button id="submit" type="submit" class="signupbtn">Sign Up</button>
+      </div>
+    </div>
+  </form>
+</div>
+<div id="id01" class="modal">
+  <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+  <form class="modal-content" method="POST" action="/login/login/">
+	{% csrf_token %}
+    <div class="container">
+      <h1>Sign in</h1>
+     
+      <hr>
+      <label for="e"><b>Email</b></label>
+      <input  type="text" placeholder="Enter Email" name="e" required>
+
+      <label for="p"><b>Password</b></label>
+      <input  type="password" placeholder="Enter Password" name="p" required>
+
+      
+     
+
+     
+
+      <div class="clearfix">
+        <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+        <button  type="submit" class="signupbtn">Sign in</button>
+      </div>
+    </div>
+  </form>
+</div>
+<script>
+if({% if sustatus == 1 %} 1 {% else %} 0 {% endif %}){
+alert("successfully registered");
+}
+if({% if sustatus == 0 %} 1 {% else %} 0 {% endif %}){
+alert("registeration failed");
+}
+if({% if sistatus  %} 1 {% else %} 0 {% endif %}){
+
+alert("log in failed");
+}
+function check_pass() {
+    if (document.getElementById('password').value ==
+            document.getElementById('confirm_password').value) {
+        document.getElementById('submit').disabled = false;
+    } else {
+        document.getElementById('submit').disabled = true;
+    }
+}
+
+
+</script>
+</body>
+</html>

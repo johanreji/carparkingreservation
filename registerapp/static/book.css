@@ -1,0 +1,99 @@
+body {  font-family: Arial, Helvetica, sans-serif;
+        background:url(img_avatar2.png) no-repeat center center fixed;
+        background-size:cover;
+     }
+* {box-sizing: border-box;}
+  a{
+    text-decoration: none;
+    color:#000;
+  }
+  
+
+/* Full-width input fields */
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+input[type="radio"]{
+    vertical-align: baseline;
+  display:inline-block;
+width: 20%;
+
+}
+.radiolabel{
+text-align:right;
+}
+
+/* Add a background color when the inputs get focus */
+input:focus {
+  background-color: #ddd;
+  outline: none;
+}
+label{
+display:block;
+
+}
+/* Set a style for all buttons */
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  font-size:20px;
+  opacity: 0.9;
+}
+button:disabled,
+button[disabled]{
+   cursor: not-allowed;
+  background-color: #cccccc;
+  color: #666666;
+}
+button:hover {
+  opacity:1;
+}
+
+/* Extra styles for the cancel button */
+.cancelbtn {
+  padding: 10px;
+  background-color: #f44336;
+}
+
+/* Float cancel and signup buttons and add an equal width */
+.cancelbtn, .signupbtn {
+  float: left;
+  width: 50%;
+}
+
+
+
+
+
+/* Style the horizontal ruler */
+hr {
+  border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+ 
+
+
+/* Clear floats */
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+
+/* Change styles for cancel button and signup button on extra small screens */
+@media screen and (max-width: 300px) {
+
+  .cancelbtn, .signupbtn {
+     width: 100%;
+  }
+}

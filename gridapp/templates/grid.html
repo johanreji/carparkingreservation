@@ -1,0 +1,398 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ 
+ 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  
+
+
+
+
+
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+    <style>
+
+.greenrect{
+fill:#16ff01;
+}
+.redrect{
+  fill: #ff0000;
+}
+
+.green{
+background-color : green;
+}
+.red{
+background-color : red;
+}
+
+
+body{
+  background-color: #000000;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='30' viewBox='0 0 1000 120'%3E%3Cg fill='none' stroke='%23222' stroke-width='5.1' %3E%3Cpath d='M-500 75c0 0 125-30 250-30S0 75 0 75s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 45c0 0 125-30 250-30S0 45 0 45s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 105c0 0 125-30 250-30S0 105 0 105s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 15c0 0 125-30 250-30S0 15 0 15s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500-15c0 0 125-30 250-30S0-15 0-15s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 135c0 0 125-30 250-30S0 135 0 135s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3C/g%3E%3C/svg%3E");
+}
+.bg{
+background-color: #11aa44;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='275' height='275' viewBox='0 0 200 200'%3E%3Cg fill='none' stroke='%237F3' stroke-width='1.4' stroke-opacity='0.1'%3E%3Crect x='-40' y='40' width='75' height='75'/%3E%3Crect x='-35' y='45' width='65' height='65'/%3E%3Crect x='-30' y='50' width='55' height='55'/%3E%3Crect x='-25' y='55' width='45' height='45'/%3E%3Crect x='-20' y='60' width='35' height='35'/%3E%3Crect x='-15' y='65' width='25' height='25'/%3E%3Crect x='-10' y='70' width='15' height='15'/%3E%3Crect x='-5' y='75' width='5' height='5'/%3E%3Crect width='35' height='35'/%3E%3Crect x='5' y='5' width='25' height='25'/%3E%3Crect x='10' y='10' width='15' height='15'/%3E%3Crect x='15' y='15' width='5' height='5'/%3E%3Crect x='40' width='75' height='75'/%3E%3Crect x='45' y='5' width='65' height='65'/%3E%3Crect x='50' y='10' width='55' height='55'/%3E%3Crect x='55' y='15' width='45' height='45'/%3E%3Crect x='60' y='20' width='35' height='35'/%3E%3Crect x='65' y='25' width='25' height='25'/%3E%3Crect x='70' y='30' width='15' height='15'/%3E%3Crect x='75' y='35' width='5' height='5'/%3E%3Crect x='40' y='80' width='35' height='35'/%3E%3Crect x='45' y='85' width='25' height='25'/%3E%3Crect x='50' y='90' width='15' height='15'/%3E%3Crect x='55' y='95' width='5' height='5'/%3E%3Crect x='120' y='-40' width='75' height='75'/%3E%3Crect x='125' y='-35' width='65' height='65'/%3E%3Crect x='130' y='-30' width='55' height='55'/%3E%3Crect x='135' y='-25' width='45' height='45'/%3E%3Crect x='140' y='-20' width='35' height='35'/%3E%3Crect x='145' y='-15' width='25' height='25'/%3E%3Crect x='150' y='-10' width='15' height='15'/%3E%3Crect x='155' y='-5' width='5' height='5'/%3E%3Crect x='120' y='40' width='35' height='35'/%3E%3Crect x='125' y='45' width='25' height='25'/%3E%3Crect x='130' y='50' width='15' height='15'/%3E%3Crect x='135' y='55' width='5' height='5'/%3E%3Crect y='120' width='75' height='75'/%3E%3Crect x='5' y='125' width='65' height='65'/%3E%3Crect x='10' y='130' width='55' height='55'/%3E%3Crect x='15' y='135' width='45' height='45'/%3E%3Crect x='20' y='140' width='35' height='35'/%3E%3Crect x='25' y='145' width='25' height='25'/%3E%3Crect x='30' y='150' width='15' height='15'/%3E%3Crect x='35' y='155' width='5' height='5'/%3E%3Crect x='200' y='120' width='75' height='75'/%3E%3Crect x='40' y='200' width='75' height='75'/%3E%3Crect x='80' y='80' width='75' height='75'/%3E%3Crect x='85' y='85' width='65' height='65'/%3E%3Crect x='90' y='90' width='55' height='55'/%3E%3Crect x='95' y='95' width='45' height='45'/%3E%3Crect x='100' y='100' width='35' height='35'/%3E%3Crect x='105' y='105' width='25' height='25'/%3E%3Crect x='110' y='110' width='15' height='15'/%3E%3Crect x='115' y='115' width='5' height='5'/%3E%3Crect x='80' y='160' width='35' height='35'/%3E%3Crect x='85' y='165' width='25' height='25'/%3E%3Crect x='90' y='170' width='15' height='15'/%3E%3Crect x='95' y='175' width='5' height='5'/%3E%3Crect x='120' y='160' width='75' height='75'/%3E%3Crect x='125' y='165' width='65' height='65'/%3E%3Crect x='130' y='170' width='55' height='55'/%3E%3Crect x='135' y='175' width='45' height='45'/%3E%3Crect x='140' y='180' width='35' height='35'/%3E%3Crect x='145' y='185' width='25' height='25'/%3E%3Crect x='150' y='190' width='15' height='15'/%3E%3Crect x='155' y='195' width='5' height='5'/%3E%3Crect x='160' y='40' width='75' height='75'/%3E%3Crect x='165' y='45' width='65' height='65'/%3E%3Crect x='170' y='50' width='55' height='55'/%3E%3Crect x='175' y='55' width='45' height='45'/%3E%3Crect x='180' y='60' width='35' height='35'/%3E%3Crect x='185' y='65' width='25' height='25'/%3E%3Crect x='190' y='70' width='15' height='15'/%3E%3Crect x='195' y='75' width='5' height='5'/%3E%3Crect x='160' y='120' width='35' height='35'/%3E%3Crect x='165' y='125' width='25' height='25'/%3E%3Crect x='170' y='130' width='15' height='15'/%3E%3Crect x='175' y='135' width='5' height='5'/%3E%3Crect x='200' y='200' width='35' height='35'/%3E%3Crect x='200' width='35' height='35'/%3E%3Crect y='200' width='35' height='35'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+   
+input[type=time] {
+  width: 100px;
+  padding: 5px 5px;
+  margin: 8px 10px;
+  display: inline;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  border-bottom: 2px solid #e7e7e7  ;
+  text-align: center;
+
+}
+.button4 {
+  background-color: white;
+  color: black;
+  border: none; 
+  border-radius: 10px;
+
+  
+  padding:  5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  cursor: pointer;
+
+}
+
+.button4:hover {background-color: #e7e7e7;}
+
+
+
+.bg{
+	width: 435px;
+
+}
+
+::-webkit-scrollbar {
+width: 0px; /* remove scrollbar space /
+background: transparent; / optional: just make scrollbar invisible /
+}
+
+    </style>
+   
+</head>
+<body >
+	
+  <nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span> 
+      </button>
+      <a class="navbar-brand" href="/grid/grid">Book My Slot</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="/grid/grid">Home</a></li>
+      
+      <li><a href="#">My Bookings</a></li>
+      <li><a href="">Scan</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+    	{% if stat %} 
+    	<li><a style="pointer-events: none; cursor: default"><span class="glyphicon glyphicon-user"></span> {{name}}</a></li>
+    	<li><a  type="button"  data-toggle="modal" data-target="#logoutModal"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+    	  {% else %}   
+      <li><a type="button"  data-toggle="modal" data-target="#signupModal"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+      <li><a  type="button"  data-toggle="modal" data-target="#loginModal"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+      {% endif %} 
+    </ul>
+	</div>
+
+  </div>
+</nav>
+<!-- <label>sta - {{sta}}</label>
+<label>stat - {{stat}}</label>
+<label>name - {{name}}</label>
+<label>result - {{result}}</label>
+<label>res - {{res}}</label>
+ -->
+
+
+<div class="modal fade" id="logoutModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        
+        <div class="modal-body">
+          <h4>Are you sure you want to log out?</h4>
+			  
+        </div>
+        <div class="modal-footer">
+          <button onclick="window.location.href='/logout/logout'" type="submit" class="btn btn-primary" >Yes</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+<div class="modal fade" id="loginModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Log In</h4>
+        </div>
+        <div class="modal-body">
+          <form action="/login/login" method="POST">
+			  <div class="form-group">
+			    <label>Email address:</label>
+			    <input type="email" class="form-control" name="email">
+			  </div>
+			  <div class="form-group">
+			    <label>Password:</label>
+			    <input type="password" class="form-control" name="password">
+			  </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" >Login</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal fade" id="signupModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Sign Up</h4>
+        </div>
+        <div class="modal-body">
+          <form action="/signup/signup" method="POST">
+          	  <div class="form-group">
+			    <label>Name:</label>
+			    <input name="name" type="text" class="form-control" >
+			  </div>
+			  <div class="form-group">
+			    <label>Phone Number:</label>
+			    <input name="phonenumber" type="text" class="form-control" >
+			  </div>
+			  <div class="form-group">
+			    <label>Vehicle Number:</label>
+			    <input name="vehiclenumber" type="text" class="form-control" >
+			  </div>
+			  <div class="form-group">
+			    <label>Email address:</label>
+			    <input type="email" class="form-control" name="email">
+			  </div>
+			  <div class="form-group">
+			    <label>Password:</label>
+			    <input type="password" class="form-control" name="password">
+			  </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" >Sign Up</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+    </form>
+      </div>
+      
+    </div>
+  </div>
+<div style="text-align: center;">
+
+	<button class="btn btn-primary" onclick="window.location.href='/grid/grid'">Check Current Slot availability</button>
+	<h4 style="color: white;">OR</h4>
+	<div class="container">
+<form class="form-inline" action="" method="POST">
+	<div class="form-group">
+  <label style=" font-size: 15px; color: white;  margin: 0;">Start Time:</label>
+  
+  <input id="stime" class="form-control" type="time" name="st" required="required" onblur="document.getElementById('st').value = this.value;" >
+</div>
+<div class="form-group">
+  <label style=" font-size: 15px; color: white;  margin: 0;">  End Time:</label>
+
+  <input id="etime" class="form-control" type="time" name="et" required="required"  onblur="document.getElementById('et').value = this.value;" >
+</div>
+  <button class="btn btn-primary" type="submit">Search</button>
+</form>
+</div>
+<h3 style="color: white;">{% if st  %}Slots Available from {{st}} to {{et}} : {% else %} Current Slot availability: {% endif %}</h3>
+</div>
+<div class="col-lg-4 col-lg-offset-4 col-sm-12 col-md-12" style="text-align: center; overflow:scroll;">
+
+    <svg class="bg"  preserveAspectRatio="xMinYMin meet"  height="230px"  style="margin:20px auto; display: block; overflow:visible;" >
+<g {% if not result.0.1 %}onclick="test(this,{{result.0.0 }})"{% endif %}>
+  <rect id="r{{result.0.0}}" x="10" y="10" width="100" height="210"  class="{% if result.0.1 %}  redrect {% else %}  greenrect {% endif %} "  style="stroke-width:3;stroke:rgb(0,0,0);cursor:{% if result.0.1 %} not-allowed {% else %} pointer {% endif %} ;"></rect>
+<text x="25" y="50" font-size="25" fill="black"> {{result.0.0}} </text>
+</g>
+<g {% if not result.1.1 %}onclick="test(this,{{result.1.0}})"{% endif %}>
+  <rect id="r{{result.1.0}}" x="115" y="10" width="100" height="210" class="{% if result.1.1 %}  redrect {% else %}  greenrect {% endif %} " style="stroke-width:3;stroke:rgb(0,0,0);cursor :{% if result.1.1 %} not-allowed {% else %} pointer {% endif %} ;"></rect>
+<text x="130" y="50" font-size="25" fill="black"> {{result.1.0}} </text>
+</g>
+<g {% if not result.2.1 %}onclick= "test(this,{{result.2.0}})"{% endif %}>
+  <rect id="r{{result.2.0}}" x="220" y="10" width="100" height="210"  class="{% if result.2.1 %}  redrect {% else %}  greenrect {% endif %} "  style="stroke-width:3;stroke:rgb(0,0,0);cursor :{% if result.2.1 %} not-allowed {% else %} pointer {% endif %} ;"></rect>
+<text x="235" y="50" font-size="25" fill="black"> {{result.2.0}} </text>
+</g>
+<g {% if not result.3.1 %}onclick="test(this,{{result.3.0}})"{% endif %}>
+  <rect id="r{{result.3.0}}" x="325" y="10" width="100" height="210"  class="{% if result.3.1 %}  redrect {% else %}  greenrect {% endif %} "  style="stroke-width:3;stroke:rgb(0,0,0);cursor :{% if result.3.1 %} not-allowed {% else %} pointer {% endif %} ;"></rect>
+<text x="340" y="50" font-size="25" fill="black"> {{result.3.0}} </text>
+</g>
+
+</svg>
+</div>
+<div class="col-lg-12 col-sm-12" style="text-align: center;">
+
+<form action="/registerform/registerform" onsubmit="return validate()">
+  <input type="hidden" name="stime" id="st" value="{{st}}">
+  <input type="hidden"  name="etime" id="et" value="{{et}}">
+  <input id="slotselected" type="hidden" name="slotselected" required="required">
+  <input class="btn btn-primary" type="submit" value="Book selected Slot">
+</form>
+</div>
+
+
+
+<br>
+<br>
+
+</body>
+</html>
+
+<script type="text/javascript">
+	
+function test(box,x){
+  
+ var element;
+   
+  
+  for(var i=0;i<3;i++){
+
+    element = document.getElementById("r"+i);
+    element.style.fill="";
+  }
+   element = document.getElementById("r"+x);
+   if(element.style.fill==="orange"){
+    element.style.fill="";
+	}
+    else{
+      element.style.fill="orange";
+    }
+  //  document.getElementById("st").value=document.getElementById("stime").value;
+  //  document.getElementById("et").value=document.getElementById("etime").value;
+    document.getElementById("slotselected").value=x;
+
+}
+
+
+
+ function validate(){
+ 	if((document.getElementById('st').value=="") || (document.getElementById('et').value=="") ||(document.getElementById("slotselected").value=="")){
+ 		alert("Enter Start time and End time");
+ 		return false
+ 	}
+ 	if({{stat}}){
+ 		return true;
+ 	}
+ 	else{
+ 		alert("Please login or sign up.");
+ 		return false;
+ 	}
+ }
+
+
+  var d = new Date();
+  document.getElementById("stime").defaultValue = d.getHours()+":"+d.getMinutes();
+
+  
+setInterval(function() {
+var d = new Date();
+  document.getElementById("stime").defaultValue = d.getHours()+":"+d.getMinutes();
+  document.getElementById('st').value = document.getElementById('stime').value;
+  document.getElementById('et').value = document.getElementById('etime').value;
+
+}, 60000);
+
+
+
+
+    setInterval(function(){
+    //var catid;
+    //catid = $(this).attr("data-catid");
+    $.ajax(
+    {
+        type:"GET",
+        url: "/grid/grid/",
+        dataType : 'json',
+          data:{
+                 status:"true",
+        }, 
+        
+        success: function( data ) 
+        {
+          
+            for(var i=0;i<3;i++){
+              element = document.getElementById("r"+i);
+                if (data[i]==1){
+                  console.log("one");
+                  element.class="greenrect";
+                }
+                else{
+                  console.log("two");
+                  element.class="redrect";
+                }
+          }
+          console.log(data[0]);
+           console.log(typeof data);
+           console.log(data);
+        }
+     })
+}, 2000);
+
+// window.onload = signupalert();
+
+
+// function signupalert(){
+// 	if({{sta}}){
+// 		if({{sta}}==2)
+// 		{
+// 			alert("Sign up failed.");
+// 		}
+// 		if({{sta}}==1)
+// 		{
+// 			alert("Sign up completed.");
+// 		}
+// 	}
+// 	if({{stat}}){
+// 		if({{stat}}==2)
+// 		{
+// 			alert("Log in failed.");
+// 		}
+// 		if({{stat}}==1)
+// 		{
+// 			alert("Log in completed.");
+// 		}
+// 	}
+// }
+</script>
