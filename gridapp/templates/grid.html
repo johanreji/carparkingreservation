@@ -290,7 +290,7 @@ function test(box,x){
  var element;
    
   
-  for(var i=0;i<3;i++){
+  for(var i=0;i<=3;i++){
 
     element = document.getElementById("r"+i);
     element.style.fill="";
@@ -355,7 +355,7 @@ var d = new Date();
         success: function( data ) 
         {
           
-            for(var i=0;i<3;i++){
+            for(var i=0;i<=3;i++){
               element = document.getElementById("r"+i);
                 if (data[i]==1){
                   console.log("one");
