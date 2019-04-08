@@ -221,8 +221,7 @@ background: transparent; / optional: just make scrollbar invisible /
   </div>
 <div style="text-align: center;">
 
-	<button class="btn btn-primary" onclick="window.location.href='/grid/grid'">Check Current Slot availability</button>
-	<h4 style="color: white;">OR</h4>
+
 	<div class="container">
 <form class="form-inline" action="" method="POST">
 	<div class="form-group">
@@ -239,6 +238,10 @@ background: transparent; / optional: just make scrollbar invisible /
 </form>
 </div>
 <h3 style="color: white;">{% if st  %}Slots Available from {{st}} to {{et}} : {% else %} Current Slot availability: {% endif %}</h3>
+	<h4 style="color: white;">or</h4>
+	<button class="btn btn-primary" onclick="window.location.href='/grid/grid'">Check Current Slot availability</button>
+
+
 </div>
 <div class="col-lg-4 col-lg-offset-4 col-sm-12 col-md-12" style="text-align: center; overflow:scroll;">
 
