@@ -29,5 +29,6 @@ urlpatterns = [
     url(r'signup/',  include('registerapp.urls')),
     url(r'login/',  include('registerapp.urls')),
     url(r'logout/',  include('registerapp.urls')),
+    url(r'bookings/',  include('registerapp.urls')),
  
 ]

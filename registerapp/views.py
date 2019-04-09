@@ -88,8 +88,10 @@ def register(request):
  stat=request.session.setdefault('loggedin',0)
  name=request.session.setdefault('name',"user")
  sustatus=1
+ response = redirect('/bookings/bookings')
+ return response
  # , {"sustatus" : sustatus,"sistatus" : 0 }
- return render(request, "result.html",{"slot":slot,"st":st,"et":et,"name":name,"rid":rid[0],"stat":stat})
+ # return render(request, "result.html",{"slot":slot,"st":st,"et":et,"name":name,"rid":rid[0],"stat":stat})
 
 
 
@@ -165,3 +167,61 @@ def logout(request):
   del request.session['customerid']
   response = redirect('/grid/grid')
   return response
+
+@csrf_exempt
+def bookings(request):
+ sustatus=0
+ stat=request.session.setdefault('loggedin',0)
+ name=request.session.setdefault('name',"user")
+ db = MySQLdb.connect(user='django', db='bookmyslot', passwd='virurohan', host='127.0.0.1')
+ cursor = db.cursor()
+ cid=request.session['customerid']
+ print(type(cid))
+ q="""SELECT Reservation.ReservationID,SlotID,StartTime,EndTime  FROM Reservation inner join ReservedSlots ON Reservation.ReservationID = ReservedSlots.ReservationID WHERE CustomerID = %s ;"""
+ # q="""SELECT ReservationID FROM ReservedSlots WHERE CustomerID = %s"""
+ d=(cid,)
+
+ cursor.execute(q,d)
+ result = cursor.fetchall()
+ print("kittiyee",result)
+
+ db.commit()
+ db.close()
+ # if(result):
+ #  if(result[0]==slot):
+ #   print("going back")
+ #   response = redirect('/grid/grid')
+ #   return response
+
+ # # name=request.POST["name"]
+ # name=request.session["name"]
+ # # email=request.POST["email"]
+ # # phonenumber=request.POST["phone"]
+ # # vehiclenumber=request.POST["vehiclenumber"]
+
+ # # q="""insert into Customer (Name,MobileNumber,VehicleNumber) values (%s , %s ,%s );"""
+ # # d=(name,phonenumber,vehiclenumber)
+ # # cursor.execute(q,d)
+ # # q="""SELECT CustomerID FROM Customer ORDER BY CustomerID DESC LIMIT 1;"""
+ # # cursor.execute(q)
+ # # cid=cursor.fetchone()
+ # cid=request.session["customerid"]
+ # print("cid moosa",cid)
+ # q="""insert into Reservation (CustomerID,ReservationStatus) values (%s , %s );"""
+ # d=(cid,1)
+ # cursor.execute(q,d)
+ # q="""SELECT ReservationID FROM Reservation ORDER BY ReservationID DESC LIMIT 1;"""
+ # cursor.execute(q)
+ # rid=cursor.fetchone()
+ # print(rid[0])
+ # q="""insert into ReservedSlots (ReservationID, SlotID, StartTime, EndTime) values (%s , %s , %s , %s);"""
+ # d=(rid,slot,strst,stret)
+ # cursor.execute(q,d)
+ # db.commit()
+ # db.close()
+ # stat=request.session.setdefault('loggedin',0)
+ # name=request.session.setdefault('name',"user")
+ # sustatus=1
+ # , {"sustatus" : sustatus,"sistatus" : 0 }
+ return render(request, "result.html",{"result":result,"name":name,"stat":stat})
+ # return render(request, "result.html")

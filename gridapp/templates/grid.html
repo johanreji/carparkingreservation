@@ -108,7 +108,7 @@ background: transparent; / optional: just make scrollbar invisible /
     <ul class="nav navbar-nav">
       <li class="active"><a href="/grid/grid">Home</a></li>
       
-      <li><a href="#">My Bookings</a></li>
+      <li><a {%if  st %} onclick="window.location.href='/bookings/bookings'"{%else%} onclick="al()" {%endif%}>My Bookings</a></li>
       <li><a href="">Scan</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
@@ -247,19 +247,19 @@ background: transparent; / optional: just make scrollbar invisible /
 
     <svg class="bg"  preserveAspectRatio="xMinYMin meet"  height="230px"  style="margin:20px auto; display: block; overflow:visible;" >
 <g {% if not result.0.1 %}onclick="test(this,{{result.0.0 }})"{% endif %}>
-  <rect id="r{{result.0.0}}" x="10" y="10" width="100" height="210"  class="{% if result.0.1 %}  redrect {% else %}  greenrect {% endif %} "  style="stroke-width:3;stroke:rgb(0,0,0);cursor:{% if result.0.1 %} not-allowed {% else %} pointer {% endif %} ;"></rect>
+  <rect id="r{{result.0.0}}" x="10" y="10" width="100" height="210"  class="{%if st %}{% if result.0.1 %}  redrect {% else %}  greenrect {% endif %} {%endif%}"  style="stroke-width:3;stroke:rgb(0,0,0);cursor:{% if result.0.1 %} not-allowed {% else %} pointer {% endif %} ;"></rect>
 <text x="25" y="50" font-size="25" fill="black"> {{result.0.0}} </text>
 </g>
 <g {% if not result.1.1 %}onclick="test(this,{{result.1.0}})"{% endif %}>
-  <rect id="r{{result.1.0}}" x="115" y="10" width="100" height="210" class="{% if result.1.1 %}  redrect {% else %}  greenrect {% endif %} " style="stroke-width:3;stroke:rgb(0,0,0);cursor :{% if result.1.1 %} not-allowed {% else %} pointer {% endif %} ;"></rect>
+  <rect id="r{{result.1.0}}" x="115" y="10" width="100" height="210" class="{%if st %}{% if result.1.1 %}  redrect {% else %}  greenrect {% endif %} {%endif%}" style="stroke-width:3;stroke:rgb(0,0,0);cursor :{% if result.1.1 %} not-allowed {% else %} pointer {% endif %} ;"></rect>
 <text x="130" y="50" font-size="25" fill="black"> {{result.1.0}} </text>
 </g>
 <g {% if not result.2.1 %}onclick= "test(this,{{result.2.0}})"{% endif %}>
-  <rect id="r{{result.2.0}}" x="220" y="10" width="100" height="210"  class="{% if result.2.1 %}  redrect {% else %}  greenrect {% endif %} "  style="stroke-width:3;stroke:rgb(0,0,0);cursor :{% if result.2.1 %} not-allowed {% else %} pointer {% endif %} ;"></rect>
+  <rect id="r{{result.2.0}}" x="220" y="10" width="100" height="210"  class="{%if st %}{% if result.2.1 %}  redrect {% else %}  greenrect {% endif %} {%endif%} "  style="stroke-width:3;stroke:rgb(0,0,0);cursor :{% if result.2.1 %} not-allowed {% else %} pointer {% endif %} ;"></rect>
 <text x="235" y="50" font-size="25" fill="black"> {{result.2.0}} </text>
 </g>
 <g {% if not result.3.1 %}onclick="test(this,{{result.3.0}})"{% endif %}>
-  <rect id="r{{result.3.0}}" x="325" y="10" width="100" height="210"  class="{% if result.3.1 %}  redrect {% else %}  greenrect {% endif %} "  style="stroke-width:3;stroke:rgb(0,0,0);cursor :{% if result.3.1 %} not-allowed {% else %} pointer {% endif %} ;"></rect>
+  <rect id="r{{result.3.0}}" x="325" y="10" width="100" height="210"  class="{%if st %}{% if result.3.1 %}  redrect {% else %}  greenrect {% endif %} {%endif%}"  style="stroke-width:3;stroke:rgb(0,0,0);cursor :{% if result.3.1 %} not-allowed {% else %} pointer {% endif %} ;"></rect>
 <text x="340" y="50" font-size="25" fill="black"> {{result.3.0}} </text>
 </g>
 
@@ -307,7 +307,9 @@ function test(box,x){
     document.getElementById("slotselected").value=x;
 
 }
-
+function al(){
+	alert("Please log in.");
+}
 
 
  function validate(){
@@ -323,6 +325,16 @@ function test(box,x){
  		return false;
  	}
  }
+ //  function valid(){
+
+ // 	if({{stat}}){
+ // 		return true;
+ // 	}
+ // 	else{
+ // 		alert("Please login or sign up.");
+ // 		return false;
+ // 	}
+ // }
 
 
   var d = new Date();
@@ -339,7 +351,7 @@ var d = new Date();
 
 
 
-
+{% if not st %}
     setInterval(function(){
     //var catid;
     //catid = $(this).attr("data-catid");
@@ -358,12 +370,14 @@ var d = new Date();
             for(var i=0;i<=3;i++){
               element = document.getElementById("r"+i);
                 if (data[i]==1){
-                  console.log("one");
-                  element.class="greenrect";
+                  console.log(data[i]);
+                  element.classList.add("redrect");
+                  element.classList.remove("greenrect");
                 }
                 else{
                   console.log("two");
-                  element.class="redrect";
+                  element.classList.add("greenrect");
+                  element.classList.remove("redrect");
                 }
           }
           console.log(data[0]);
@@ -372,7 +386,7 @@ var d = new Date();
         }
      })
 }, 2000);
-
+{% endif %}
 // window.onload = signupalert();
 
 

@@ -37,7 +37,8 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
     <ul class="nav navbar-nav">
       <li class="active"><a href="/grid/grid">Home</a></li>
       
-      <li><a href="#">My Bookings</a></li>
+           <li><a {% if stat %} onclick="window.location.href='/bookings/bookings'" {% else %} onclick="al()" {%endif%} >My Bookings</a></li>
+
       <li><a href="">Scan</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
@@ -53,6 +54,24 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 
   </div>
 </nav>
+<div class="modal fade" id="logoutModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        
+        <div class="modal-body">
+          <h4>Are you sure you want to log out?</h4>
+        
+        </div>
+        <div class="modal-footer">
+          <button onclick="window.location.href='/logout/logout'" type="submit" class="btn btn-primary" >Yes</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
 <div  class="form-style-6" style="text-align: center;">
 <br>
 <br>
