@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html>
 <head>
@@ -10,7 +11,8 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-  
+  <script src="{% static 'js/adapter.js' %}"></script>
+  <script src="{% static 'js/instascan.min.js' %}"></script>
 
 
 
@@ -93,6 +95,7 @@ background: transparent; / optional: just make scrollbar invisible /
    
 </head>
 <body >
+  
 	
   <nav class="navbar navbar-inverse">
   <div class="container-fluid">
@@ -108,8 +111,9 @@ background: transparent; / optional: just make scrollbar invisible /
     <ul class="nav navbar-nav">
       <li class="active"><a href="/grid/grid">Home</a></li>
       
-      <li><a {%if  st %} onclick="window.location.href='/bookings/bookings'"{%else%} onclick="al()" {%endif%}>My Bookings</a></li>
-      <li><a href="">Scan</a></li>
+      <!-- <li><a {%if  st %} onclick="window.location.href='/bookings/bookings'"{%else%} onclick="al()" {%endif%}>My Bookings</a></li> -->
+       <li><a onclick="window.location.href='/bookings/bookings'">My Bookings</a></li>
+      <li><a data-toggle="modal" href="#myModal" onclick="qrClick()">Scan</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
     	{% if stat %} 
@@ -219,25 +223,51 @@ background: transparent; / optional: just make scrollbar invisible /
       
     </div>
   </div>
+
+  <div class="modal" id="myModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Scan QR Code</h4>
+          <button type="button" onclick="closeScanner(false, null)" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          
+            <video id="preview" class="embed-responsive-item" width=90% height=90%></video>
+          
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="closeScanner(false, null)">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
 <div style="text-align: center;">
 
 
 	<div class="container">
 <form class="form-inline" action="" method="POST">
 	<div class="form-group">
-  <label style=" font-size: 15px; color: white;  margin: 0;">Start Time:</label>
-  
+  <label style=" font-size: 15px; color: white;  margin: 0;">Start Date:</label>
+  <input id="sdate" class="form-control" type="date" name="dst" required="required" onblur="document.getElementById('dst').value = this.value;" >
   <input id="stime" class="form-control" type="time" name="st" required="required" onblur="document.getElementById('st').value = this.value;" >
 </div>
 <div class="form-group">
-  <label style=" font-size: 15px; color: white;  margin: 0;">  End Time:</label>
-
+  <label style=" font-size: 15px; color: white;  margin: 0;">  End Date:</label>
+  <input id="edate" class="form-control" type="date" name="det" required="required" onblur="document.getElementById('est').value = this.value;" >
   <input id="etime" class="form-control" type="time" name="et" required="required"  onblur="document.getElementById('et').value = this.value;" >
 </div>
   <button class="btn btn-primary" type="submit">Search</button>
 </form>
 </div>
-<h3 style="color: white;">{% if st  %}Slots Available from {{st}} to {{et}} : {% else %} Current Slot availability: {% endif %}</h3>
+<h3 style="color: white;">{% if st  %}Slots Available from {{dst}},  {{st}} to {{det}} {{et}} : {% else %} Current Slot availability: {% endif %}</h3>
 	<h4 style="color: white;">or</h4>
 	<button class="btn btn-primary" onclick="window.location.href='/grid/grid'">Check Current Slot availability</button>
 
@@ -267,7 +297,9 @@ background: transparent; / optional: just make scrollbar invisible /
 </div>
 <div class="col-lg-12 col-sm-12" style="text-align: center;">
 
-<form action="/registerform/registerform" onsubmit="return validate()">
+<form action="/registerform/registerform" method="POST" onsubmit="return validate()">
+  <input type="hidden" name="sdate" id="dst" value="{{dst}}">
+  <input type="hidden"  name="edate" id="det" value="{{det}}">
   <input type="hidden" name="stime" id="st" value="{{st}}">
   <input type="hidden"  name="etime" id="et" value="{{et}}">
   <input id="slotselected" type="hidden" name="slotselected" required="required">
@@ -313,7 +345,8 @@ function al(){
 
 
  function validate(){
- 	if((document.getElementById('st').value=="") || (document.getElementById('et').value=="") ||(document.getElementById("slotselected").value=="")){
+ 	if((document.getElementById('st').value=="") || (document.getElementById('et').value=="") ||(document.getElementById("slotselected").value=="") || (document.getElementById('dst').value=="") 
+    || (document.getElementById('det').value=="") ){
  		alert("Enter Start time and End time");
  		return false
  	}
@@ -412,4 +445,59 @@ var d = new Date();
 // 		}
 // 	}
 // }
+
+var scanner;
+function qrScanner(){
+   scanner = new Instascan.Scanner({ video: document.getElementById('preview'),refractoryPeriod:2000 });
+      scanner.addListener('scan', function (content) {
+        console.log(content);
+        closeScanner(true, content);
+      //   var qrReq=new XMLHttpRequest;
+      //   XMLHttpRequest.responseType="json";
+      //   qrReq.onload = function(){
+      //     var res=JSON.parse(this.response);
+      //     var pcode=res["promocode"];
+      //     //alert(this.response);
+      //     closeScanner(true, pcode);
+      //   }
+      //   var data=JSON.stringify({"id":content});
+      //   qrReq.open("post", "getpromocode.php", true);
+      // qrReq.setRequestHeader("Content-Type", "application/json");
+      // qrReq.send(data);
+      });
+      Instascan.Camera.getCameras().then(function (cameras) {
+        if (cameras.length > 0) {
+          scanner.start(cameras[0]);
+        } else {
+          console.error('No cameras found.');
+        }
+      }).catch(function (e) {
+        $("#myModal").modal("hide");
+        console.error(e);
+      });
+}
+
+function closeScanner(flag, data){
+  scanner.stop();
+    
+        $("#myModal").modal("hide");
+}
+function qrClick(){
+  qrScanner()
+  $("#myModal").modal();
+}
 </script>
+
+<script>
+  $(document).ready(function(){
+  // Show the Modal on load
+  //$("#myModal").modal("show");
+    
+  // Hide the Modal
+  function closeScanner(flag, data){
+  scanner.stop();
+  $("#myModal").modal("hide");
+}
+});
+
+  </script>

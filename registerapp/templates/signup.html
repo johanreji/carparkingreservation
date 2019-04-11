@@ -102,9 +102,10 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
                 <div class="panel-body">
                     <form role="form" action="/register/register" method="POST" >
                       <div class="form-group">
-                          <label>Booking at Slot {{slotselected}} from {{st}} to {{et}}</label>
-                              <input class="form-control" type="hidden" name="st" value="{{st}}">
-                              <input class="form-control" type="hidden" name="et" value="{{et}}">
+                          <label>Booking at Slot {{slotselected}} from {{dst}} to {{det}}</label>
+                              <input class="form-control" type="hidden" name="st" value="{{dst}}">
+                              <input class="form-control" type="hidden" name="et" value="{{det}}">
+                              <input class="form-control" type="hidden" name="rid" value="{{rid}}">
                               <input class="form-control" type="hidden" name="slot" value="{{slotselected}}">
                       </div>
                     <div class="form-group">

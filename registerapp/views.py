@@ -6,83 +6,74 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 import datetime
 from django.shortcuts import redirect
-import MySQLdb
+import mysql.connector
 from django.db import transaction
 # BookingQueue = queue.Queue(10)
 # Create your views here.
+@csrf_exempt
 def registerform(request):
- if(request.method=="GET"):
+ if(request.method=="POST"):
   stat=request.session.setdefault('loggedin',0)
   name=request.session.setdefault('name',"user")
-  ss=request.GET["slotselected"]
-  st=request.GET["stime"]
-  dst = datetime.datetime.strptime(st, '%H:%M')
-  et=request.GET["etime"]
-  det = datetime.datetime.strptime(et, '%H:%M')
-  diff=det-dst
+  slot=request.POST["slotselected"]
+  st=request.POST["stime"]
+  et=request.POST["etime"]
+  start_date=request.POST["sdate"]
+  end_date = request.POST["edate"]
+  start_timestamp = start_date + ' ' + st
+  start_timestamp = datetime.datetime.strptime(start_timestamp,'%Y-%m-%d %H:%M') 
+  end_timestamp = end_date + ' ' + et
+  end_timestamp = datetime.datetime.strptime(end_timestamp,'%Y-%m-%d %H:%M') 
+  diff=abs(start_timestamp - end_timestamp)
   total_mins = (diff.days*1440 + diff.seconds/60)
   amt=total_mins/60*10
   amt=round(amt,2)
+  print("start_timestamp", start_timestamp)
+  db = mysql.connector.connect(user='django', password='virurohan', 
+                                database='bookmyslot')
+  cursor = db.cursor()
+  user_id=request.session["customerid"]
+  q="""INSERT INTO Reservation (CustomerID,ReservationStatus) VALUES (%s , %s );"""
+  d=(user_id,0)
+  cursor.execute(q, d)
+  rid=cursor.lastrowid
+  # cursor.execute(q, d)
+  # rid=cursor.fetchone()
+  # rid=rid[0]
+  print("rid ", rid)
+  q="""SELECT SlotID  FROM ReservedSlots WHERE StartTime = %s AND EndTime = %s AND SlotID =%s ;"""
+  d=(start_timestamp,end_timestamp, slot)
+  cursor.execute(q,d)
+  result = cursor.fetchall()
+  if(result):
+    response = redirect('/grid/grid')
+    return response
+  q="""INSERT into ReservedSlots (ReservationID, SlotID, StartTime, EndTime) VALUES (%s , %s , %s , %s);"""
+  d=(rid,slot,start_timestamp,end_timestamp)
+  cursor.execute(q,d)
+  db.commit()
+  cursor.close()
+  db.close()
   print("session test",name)
-  return render(request, "signup.html",{"slotselected":ss,"st":st,"et":et,"amt":amt,"stat":stat,"name":name})
+  return render(request, "signup.html",{"slotselected":slot,"st":st,"et":et,"amt":amt,
+    "stat":stat, "dst":start_timestamp, "det": end_timestamp, "name":name, "rid":rid})
 
 
 
 @csrf_exempt
 def register(request):
+ print("post data", request.POST)
  sustatus=0
- db = MySQLdb.connect(user='django', db='bookmyslot', passwd='virurohan', host='127.0.0.1')
+ db = mysql.connector.connect(user='django', password='virurohan', 
+                                database='bookmyslot')
  cursor = db.cursor()
- # e=request.POST["email"]
- # p=request.POST["psw"]
-   
- # q="""insert into accountdetail (email,password) values (%s , %s );"""
- # d=(e,p)
- # cursor.execute(q,d)
- st=request.POST["st"]
- dst = datetime.datetime.strptime(st, '%H:%M')
- dst=dst.replace(year=2018)
- strst=dst.strftime('%Y-%m-%d %H:%M:%S')
- et=request.POST["et"]
- det = datetime.datetime.strptime(et, '%H:%M')
- det=det.replace(year=2018)
- stret=det.strftime('%Y-%m-%d %H:%M:%S')
- slot=request.POST["slot"]
- q="""SELECT SlotID  FROM ReservedSlots WHERE StartTime = %s AND EndTime = %s ;"""
- d=(strst,stret)
- cursor.execute(q,d)
- result = cursor.fetchone()
- print(result)
- if(result):
-  if(result[0]==slot):
-   print("going back")
-   response = redirect('/grid/grid')
-   return response
-
- # name=request.POST["name"]
  name=request.session["name"]
- # email=request.POST["email"]
- # phonenumber=request.POST["phone"]
- # vehiclenumber=request.POST["vehiclenumber"]
-
- # q="""insert into Customer (Name,MobileNumber,VehicleNumber) values (%s , %s ,%s );"""
- # d=(name,phonenumber,vehiclenumber)
- # cursor.execute(q,d)
- # q="""SELECT CustomerID FROM Customer ORDER BY CustomerID DESC LIMIT 1;"""
- # cursor.execute(q)
- # cid=cursor.fetchone()
- cid=request.session["customerid"]
- print("cid moosa",cid)
- q="""insert into Reservation (CustomerID,ReservationStatus) values (%s , %s );"""
- d=(cid,1)
+ customer_id=request.session["customerid"]
+ reservation_id=request.POST["rid"]
+ q="""UPDATE Reservation SET ReservationStatus = %s WHERE ReservationID=%s ;"""
+ d=(1,reservation_id)
  cursor.execute(q,d)
- q="""SELECT ReservationID FROM Reservation ORDER BY ReservationID DESC LIMIT 1;"""
- cursor.execute(q)
- rid=cursor.fetchone()
- print(rid[0])
- q="""insert into ReservedSlots (ReservationID, SlotID, StartTime, EndTime) values (%s , %s , %s , %s);"""
- d=(rid,slot,strst,stret)
- cursor.execute(q,d)
+ cursor.close()
  db.commit()
  db.close()
  stat=request.session.setdefault('loggedin',0)
@@ -97,7 +88,8 @@ def register(request):
 
 @csrf_exempt
 def signup(request):
- db = MySQLdb.connect(user='django', db='bookmyslot', passwd='virurohan', host='127.0.0.1')
+ db = mysql.connector.connect(user='django', password='virurohan', 
+                            database='bookmyslot')
  cursor = db.cursor()
  name=request.POST["name"]
  email=request.POST["email"]
@@ -126,7 +118,8 @@ def signup(request):
 
 @csrf_exempt
 def login(request):
- db = MySQLdb.connect(user='django', db='bookmyslot', passwd='virurohan', host='127.0.0.1')
+ db = mysql.connector.connect(user='django', password='virurohan', 
+                                database='bookmyslot')
  cursor = db.cursor()
  email=request.POST["email"]
  print(email)
@@ -173,55 +166,23 @@ def bookings(request):
  sustatus=0
  stat=request.session.setdefault('loggedin',0)
  name=request.session.setdefault('name',"user")
- db = MySQLdb.connect(user='django', db='bookmyslot', passwd='virurohan', host='127.0.0.1')
+ db = mysql.connector.connect(user='django', password='virurohan', 
+                                database='bookmyslot')
  cursor = db.cursor()
- cid=request.session['customerid']
- print(type(cid))
- q="""SELECT Reservation.ReservationID,SlotID,StartTime,EndTime  FROM Reservation inner join ReservedSlots ON Reservation.ReservationID = ReservedSlots.ReservationID WHERE CustomerID = %s ;"""
- # q="""SELECT ReservationID FROM ReservedSlots WHERE CustomerID = %s"""
- d=(cid,)
+ try:
+  cid=request.session['customerid']
+ except Exception:
+  response = redirect('/grid/grid') 
+  return response
+ else: 
+  print(type(cid))
+  q="""SELECT Reservation.ReservationID,SlotID,StartTime,EndTime  FROM Reservation inner join ReservedSlots ON Reservation.ReservationID = ReservedSlots.ReservationID WHERE CustomerID = %s ;"""
+  d=(cid,)
+  cursor.execute(q,d)
+  result = cursor.fetchall()
+  print("kittiyee",result)
+  cursor.close()
+  db.commit()
+  db.close()
+  return render(request, "result.html",{"result":result,"name":name,"stat":stat})
 
- cursor.execute(q,d)
- result = cursor.fetchall()
- print("kittiyee",result)
-
- db.commit()
- db.close()
- # if(result):
- #  if(result[0]==slot):
- #   print("going back")
- #   response = redirect('/grid/grid')
- #   return response
-
- # # name=request.POST["name"]
- # name=request.session["name"]
- # # email=request.POST["email"]
- # # phonenumber=request.POST["phone"]
- # # vehiclenumber=request.POST["vehiclenumber"]
-
- # # q="""insert into Customer (Name,MobileNumber,VehicleNumber) values (%s , %s ,%s );"""
- # # d=(name,phonenumber,vehiclenumber)
- # # cursor.execute(q,d)
- # # q="""SELECT CustomerID FROM Customer ORDER BY CustomerID DESC LIMIT 1;"""
- # # cursor.execute(q)
- # # cid=cursor.fetchone()
- # cid=request.session["customerid"]
- # print("cid moosa",cid)
- # q="""insert into Reservation (CustomerID,ReservationStatus) values (%s , %s );"""
- # d=(cid,1)
- # cursor.execute(q,d)
- # q="""SELECT ReservationID FROM Reservation ORDER BY ReservationID DESC LIMIT 1;"""
- # cursor.execute(q)
- # rid=cursor.fetchone()
- # print(rid[0])
- # q="""insert into ReservedSlots (ReservationID, SlotID, StartTime, EndTime) values (%s , %s , %s , %s);"""
- # d=(rid,slot,strst,stret)
- # cursor.execute(q,d)
- # db.commit()
- # db.close()
- # stat=request.session.setdefault('loggedin',0)
- # name=request.session.setdefault('name',"user")
- # sustatus=1
- # , {"sustatus" : sustatus,"sistatus" : 0 }
- return render(request, "result.html",{"result":result,"name":name,"stat":stat})
- # return render(request, "result.html")

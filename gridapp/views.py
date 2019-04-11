@@ -5,9 +5,9 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 from django.http import JsonResponse
+import time
 
-
-import MySQLdb
+import mysql.connector
 import itertools
 import json
 
@@ -23,7 +23,8 @@ def getdata(request):
   print(cnnts)
   details=json.loads(data)
   detailsplain={}
-  db = MySQLdb.connect(user='django', db='bookmyslot', passwd='virurohan', host='127.0.0.1')
+  db = mysql.connector.connect(user='django', password='virurohan', 
+                                database='bookmyslot')
   cursor = db.cursor()
   #cur= db.cursor()
   cursor.execute('SELECT SlotID,occupied FROM Slots')
@@ -56,27 +57,44 @@ def getdata(request):
 
 @csrf_exempt
 def grid(request):    
- db = MySQLdb.connect(user='django', db='bookmyslot', passwd='virurohan', host='127.0.0.1')
- cursor = db.cursor()
- cur=db.cursor()
+ db = mysql.connector.connect(user='django', password='virurohan', 
+                                database='bookmyslot')
+ cursor = db.cursor(buffered=True)
+ cur=db.cursor(buffered=True)
  cursor.execute('SELECT SlotID,occupied FROM Slots')
- cur.execute('SELECT SlotID, StartTime, EndTime FROM ReservedSlots')
+ #curr_time=time.time()
+ curr_time=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+ q = "SELECT SlotID, StartTime, EndTime FROM ReservedSlots WHERE EndTime > %s"
+ d=(curr_time,)
+ cur.execute(q,d)
+
  result = cursor.fetchall()
+ cursor.close()
  res=cur.fetchall()
- db.close()
+ cur.close()
+ 
  
  if(request.method=="POST"):
+
+  print("post data", request.POST)
   st=request.POST["st"]
-  timest=datetime.strptime(st,'%H:%M').time()
+  st1=st
   print(st)
- # print(res[0][1])
   et=request.POST["et"]
-  timeet=datetime.strptime(et,'%H:%M').time()
-  print(et)
+  et1=et
+  start_date_view=request.POST["dst"]
+  end_date_view=request.POST["det"]
+  start_timestamp=start_date_view + ' ' + st
+  start_timestamp=datetime.strptime(start_timestamp,"%Y-%m-%d %H:%M")
+  end_timestamp=end_date_view + ' ' + et
+  end_timestamp=datetime.strptime(end_timestamp,"%Y-%m-%d %H:%M")
+  # print(et)
+  # print("sts", start_timestamp)
+  # print("sts type", type(start_timestamp))
   stat=request.session.setdefault('loggedin',0)
   name=request.session.setdefault('name',"user")
   if res:
-   dst=res[1][1].time()
+   dst=res[1][1]
    print("dst",dst)
    det=res[1][2].time()
    print("det",det)
@@ -89,7 +107,7 @@ def grid(request):
     a=a+(item[0],)
    for item in res:
 
-    if((timest>=item[1].time() and timest<=item[2].time()) or (timeet>=item[1].time() and timeet<=item[2].time())):
+    if((start_timestamp>=item[1] and start_timestamp<=item[2]) or (end_timestamp>=item[1] and end_timestamp<=item[2])):
      o=o+(item[0],)
      
     
@@ -102,11 +120,12 @@ def grid(request):
      r=r+((i,1),)
     else:
      r=r+((i,0),) 
-    print(r)
-   return render(request, "grid.html", {"result" : r , "res":res,"st":st,"et":et,"stat":stat,"name":name})
+    print("avaliable tuples: ", r)
+   return render(request, "grid.html", {"result" : r , "res":res, "dst":start_date_view, "det":end_date_view, "st":st1,"et":et1,"stat":stat,"name":name})
   else: 
    r=()
-   return render(request, "grid.html", {"result" : result , "res":r,"st":st,"et":et,"stat":stat,"name":name})
+   print("no bookings")
+   return render(request, "grid.html", {"result" : result , "res":r, "dst":start_date_view, "det":end_date_view, "st":st1,"et":et1,"stat":stat,"name":name})
 
 
  elif request.method=="GET":

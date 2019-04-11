@@ -19,7 +19,9 @@ from django.conf.urls import include
 from django.contrib import admin
 
 
+
 urlpatterns = [
+# url(r'^z',  include('background_app.urls')),
     url(r'grid/', include('gridapp.urls')),
  url(r'getdata/', include('gridapp.urls')),
    
@@ -30,5 +32,8 @@ urlpatterns = [
     url(r'login/',  include('registerapp.urls')),
     url(r'logout/',  include('registerapp.urls')),
     url(r'bookings/',  include('registerapp.urls')),
+    
  
 ]
+
+# hello(repeat=10,repeat_until=None)

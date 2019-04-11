@@ -37,11 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'background_task',
+    'background_task',
     'gridapp',
     'registerapp',
-    
-
 ]
 
 MIDDLEWARE = [
@@ -84,7 +82,7 @@ WSGI_APPLICATION = 'bookmyslot.wsgi.application'
 
 DATABASES = {
     'default': {
-    'ENGINE': 'django.db.backends.mysql',
+    'ENGINE': 'mysql.connector.django',
     'NAME': 'bookmyslot',
     'HOST': '127.0.0.1',
     'PORT': '3306',
