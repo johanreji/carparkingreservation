@@ -59,9 +59,10 @@ def grid(request):
  db = MySQLdb.connect(user='django', db='bookmyslot', passwd='virurohan', host='127.0.0.1')
  cursor = db.cursor()
  cur=db.cursor()
- cursor.execute('SELECT SlotID,occupied FROM Slots')
+ cursor.execute('SELECT SlotID,occupied,x,y,width,height FROM Slots')
  cur.execute('SELECT SlotID, StartTime, EndTime FROM ReservedSlots')
  result = cursor.fetchall()
+ print("sivane--",result)
  res=cur.fetchall()
  db.close()
  
@@ -76,10 +77,7 @@ def grid(request):
   stat=request.session.setdefault('loggedin',0)
   name=request.session.setdefault('name',"user")
   if res:
-   dst=res[1][1].time()
-   print("dst",dst)
-   det=res[1][2].time()
-   print("det",det)
+
    o=()
    a=()
    r=()
@@ -89,7 +87,7 @@ def grid(request):
     a=a+(item[0],)
    for item in res:
 
-    if((timest>=item[1].time() and timest<=item[2].time()) or (timeet>=item[1].time() and timeet<=item[2].time())):
+    if((timest>item[1].time() and timest<item[2].time()) or (timeet>item[1].time() and timeet<item[2].time())):
      o=o+(item[0],)
      
     
@@ -103,6 +101,7 @@ def grid(request):
     else:
      r=r+((i,0),) 
     print(r)
+
    return render(request, "grid.html", {"result" : r , "res":res,"st":st,"et":et,"stat":stat,"name":name})
   else: 
    r=()

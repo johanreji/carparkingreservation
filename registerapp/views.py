@@ -135,26 +135,39 @@ def login(request):
  print(password)
  q="select password,name,CustomerID from Customer where email = %s ;"
  d=(email,)
+
  cursor.execute(q,d)
  result=cursor.fetchone()
- print(result)
-
- try:
-    transaction.commit_unless_managed()
- except:
-    if(result[0]==password):
-      request.session['loggedin'] = 1
-      request.session['name'] = result[1]
-      request.session['customerid'] = result[2]
-      response = redirect('/grid/grid')
-    else:
-      request.session['loggedin'] = 0
-      response = redirect('/grid/grid')
-
+ if(result == None):
+  request.session['loggedin'] = 0
+  print("asdasd")
+  response = redirect('/grid/grid')
+  print("reslrer",result)
  else:
-    response = redirect('/grid/grid?stat=2')
- db.commit()
- db.close()
+  if(result[0]==password):
+   request.session['loggedin'] = 1
+   request.session['name'] = result[1]
+   request.session['customerid'] = result[2]
+   response = redirect('/grid/grid')
+  else:
+   request.session['loggedin'] = 0
+   response = redirect('/grid/grid')
+ # try:
+ #    transaction.commit_unless_managed()
+ # except:
+ #    if(result[0]==password):
+ #      request.session['loggedin'] = 1
+ #      request.session['name'] = result[1]
+ #      request.session['customerid'] = result[2]
+ #      response = redirect('/grid/grid')
+ #    else:
+ #      request.session['loggedin'] = 0
+ #      response = redirect('/grid/grid')
+
+ # else:
+ #    response = redirect('/grid/grid?stat=2')
+  db.commit()
+  db.close()
 
 
  return response
@@ -171,7 +184,12 @@ def logout(request):
 @csrf_exempt
 def bookings(request):
  sustatus=0
+
  stat=request.session.setdefault('loggedin',0)
+ if(stat==0):
+  response = redirect('/grid/grid')
+  return response
+
  name=request.session.setdefault('name',"user")
  db = MySQLdb.connect(user='django', db='bookmyslot', passwd='virurohan', host='127.0.0.1')
  cursor = db.cursor()
@@ -225,3 +243,27 @@ def bookings(request):
  # , {"sustatus" : sustatus,"sistatus" : 0 }
  return render(request, "result.html",{"result":result,"name":name,"stat":stat})
  # return render(request, "result.html")
+
+
+@csrf_exempt
+def remove(request):
+ sustatus=0
+ db = MySQLdb.connect(user='django', db='bookmyslot', passwd='virurohan', host='127.0.0.1')
+ cursor = db.cursor()
+
+ rid=request.GET["rid"]
+ q="""DELETE FROM ReservedSlots WHERE ReservationID = %s"""
+ d=(rid,)
+ cursor.execute(q,d)
+ q="""DELETE FROM Reservation WHERE ReservationID = %s"""
+ d=(rid,)
+ cursor.execute(q,d)
+
+
+ db.commit()
+ db.close()
+ stat=request.session.setdefault('loggedin',0)
+ name=request.session.setdefault('name',"user")
+ sustatus=1
+ response = redirect('/bookings/bookings')
+ return response

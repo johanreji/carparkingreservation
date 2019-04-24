@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.1/cropper.js"></script>
+			<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.1/cropper.css">
+
+
+</head>
+<body>
+<a href="/grid/grid">home</a>
+	<div>
+  <img id="image" src="/master/media/bg.jpg">
+</div>
+<form action="/addslot/addslot" method="POST" enctype="multipart/form-data">
+	<input type="text" name="slotid">
+	<input id="x" type="text" name="x">
+	<input id="y"  type="text" name="y">
+	<input id="width"  type="text" name="width">
+	<input id="height"  type="text" name="height">
+	<input type="submit" >
+</form>
+
+
+
+</body>
+</html>
+<script type="text/javascript">
+	
+
+
+const image = document.getElementById('image');
+const cropper = new Cropper(image, {
+  zoomable:false,
+  background:false,
+  viewMode:2,
+  crop(event) {
+    console.log(event.detail.x);
+    document.getElementById("x").value=event.detail.x;
+    document.getElementById("y").value=event.detail.y;
+    document.getElementById("width").value=event.detail.width;
+    document.getElementById("height").value=event.detail.height;
+    console.log(event.detail.y);
+    console.log(event.detail.width);
+    console.log(event.detail.height);
+
+  },
+});
+</script>

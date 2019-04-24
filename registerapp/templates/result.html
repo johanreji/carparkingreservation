@@ -522,7 +522,7 @@ color: #525252;
         <td>{{item.1}}</td>
         <td>{{item.2.time}}</td>
         <td>{{item.3.time}}</td>
-        <td><button class="cancel btn btn-danger">    Cancel </button>
+        <td><button class="cancel btn btn-danger" onclick="window.location.href='/remove/remove?rid={{item.0}}'">    Cancel </button>
         </td>
         
       </tr>
@@ -565,7 +565,7 @@ for (var i = 1, row; row = table.rows[i]; i++) {
 setTimeout(function(){ 
   document.getElementsByClassName("loading")[0].style.display="none";
 
- }, 3000);
+ }, 000);
 // !function(d) {
 //     d.fakeLoader = function(i) {
 //         var s = d.extend({
