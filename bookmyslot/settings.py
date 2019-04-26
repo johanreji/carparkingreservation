@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'background_task',
     'gridapp',
     'registerapp',
+    #'django_rq',
+    #'scheduler',
 ]
 
 MIDDLEWARE = [
@@ -110,6 +112,37 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# RQ_QUEUES = {
+#     'default': {
+#         'HOST': 'localhost',
+#         'PORT': 6379,
+#         'DB': 0,
+#         #'PASSWORD': 'some-password',
+#         'DEFAULT_TIMEOUT': 360,
+#     },
+#     'with-sentinel': {
+#         'SENTINELS': [('localhost', 26736), ('localhost', 26737)],
+#         'MASTER_NAME': 'redismaster',
+#         'DB': 0,
+#         'PASSWORD': 'secret',
+#         'SOCKET_TIMEOUT': None,
+#         'CONNECTION_KWARGS': {
+#             'socket_connect_timeout': 0.3
+#         },
+#     },
+#     'high': {
+#         'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379/0'), # If you're on Heroku
+#         'DEFAULT_TIMEOUT': 500,
+#     },
+#     'low': {
+#         'HOST': 'localhost',
+#         'PORT': 6379,
+#         'DB': 0,
+#     }
+# }
+
+# RQ_EXCEPTION_HANDLERS = ['path.to.my.handler']
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
@@ -133,3 +166,52 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
 	os.path.join(BASE_DIR, 'static'),
 ]
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'formatters': {
+#         'simple': {
+#             'format': '%(asctime)s %(levelname)s %(message)s'
+#         },
+#     },
+#     'handlers': {
+#         'console': {
+#             'level': 'DEBUG',
+#             'class': 'logging.StreamHandler',
+#             'formatter': 'simple'
+#         },
+#     },
+
+#     'loggers': {
+#         'django.request': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#             'propagate': True,
+#         },
+#         'rq_scheduler': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#             'propagate': True,
+#         },
+#     },
+# }
+
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Kolkata'
+
+from celery.schedules import crontab
+CELERY_BEAT_SCHEDULE = {
+    'booktimer': {
+        'task': 'gridapp.tasks.booktimer',
+        'schedule': crontab(minute='*/2'),
+    },
+    'detect_exit':{
+    'task':'gridapp.tasks.detect_exit',
+    'schedule': crontab(minute = '*/2'),
+    },
+}

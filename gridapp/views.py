@@ -3,14 +3,17 @@ from __future__ import unicode_literals
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.http import JsonResponse
 import time
-
+import os
 import mysql.connector
 import itertools
 import json
 
+
+
+CNNDELAY = 2
 
 @csrf_exempt
 def getdata(request):
@@ -63,7 +66,8 @@ def grid(request):
  cur=db.cursor(buffered=True)
  cursor.execute('SELECT SlotID,occupied FROM Slots')
  #curr_time=time.time()
- curr_time=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+ curr_time = datetime.utcnow() + timedelta(hours=5.5)
+ curr_time=curr_time.strftime('%Y-%m-%d %H:%M:%S')
  q = "SELECT SlotID, StartTime, EndTime FROM ReservedSlots WHERE EndTime > %s"
  d=(curr_time,)
  cur.execute(q,d)
@@ -93,11 +97,12 @@ def grid(request):
   # print("sts type", type(start_timestamp))
   stat=request.session.setdefault('loggedin',0)
   name=request.session.setdefault('name',"user")
-  if res:
-   dst=res[1][1]
-   print("dst",dst)
-   det=res[1][2].time()
-   print("det",det)
+  if True:
+   # print("res is : ", res)
+   # dst=res[1][1]
+   # print("dst",dst)
+   # det=res[1][2].time()
+   # print("det",det)
    o=()
    a=()
    r=()
@@ -121,11 +126,11 @@ def grid(request):
     else:
      r=r+((i,0),) 
     print("avaliable tuples: ", r)
-   return render(request, "grid.html", {"result" : r , "res":res, "dst":start_date_view, "det":end_date_view, "st":st1,"et":et1,"stat":stat,"name":name})
-  else: 
-   r=()
-   print("no bookings")
-   return render(request, "grid.html", {"result" : result , "res":r, "dst":start_date_view, "det":end_date_view, "st":st1,"et":et1,"stat":stat,"name":name})
+   if r: 
+    return render(request, "grid.html", {"result" : r , "res":res, "dst":start_date_view, "det":end_date_view, "st":st1,"et":et1,"stat":stat,"name":name})
+   else: 
+    print("no bookings")
+    return render(request, "grid.html", {"result" : result , "res":r, "dst":start_date_view, "det":end_date_view, "st":st1,"et":et1,"stat":stat,"name":name})
 
 
  elif request.method=="GET":
@@ -152,5 +157,74 @@ def grid(request):
  else:
   return render(request, "grid.html", {"result" : result , "res":res})
 
-
-
+@csrf_exempt
+def scan(request):
+ resdict={}
+ try:
+  # stat=request.session.setdefault('loggedin',0)
+  # name=request.session.setdefault('name',"user")
+  user_id=request.session["customerid"]
+ except Exception:
+  resdict["status"]=-1
+  return JsonResponse(resdict)  
+ else:  
+  if(request.method=="POST"):
+   received_json_data=json.loads(request.body)
+   print(received_json_data)
+   print(type(received_json_data))
+   curr_slot=received_json_data["slot_id"]
+   print(curr_slot)
+   print(user_id)
+   db = mysql.connector.connect(user='django', password='virurohan', 
+                                 database='bookmyslot')
+   cursor = db.cursor()
+   print(datetime.now())
+   curr_time = datetime.utcnow() + timedelta(hours=5.5)
+   curr_time=curr_time.strftime('%Y-%m-%d %H:%M:%S')
+   print(curr_time)
+   q = "SELECT SlotID, StartTime, EndTime, ReservedSlots.ReservationID FROM Reservation INNER JOIN ReservedSlots WHERE Reservation.ReservationID \
+   = ReservedSlots.ReservationID AND Reservation.CustomerID = %s AND StartTime < %s AND EndTime > %s AND SlotID = %s"
+   d=(user_id, curr_time, curr_time, curr_slot)
+   cursor.execute(q,d)
+   result = cursor.fetchall()
+   if result:
+    reservation_id = result[0][3]
+    endtime = result[0][2]
+    resdict["status"]=1
+    q2 = "SELECT occupied, CNNTimestamp, ReservationID, CNNFlag FROM Slots WHERE SlotID = %s"
+    d2 = (curr_slot,)
+    cursor.execute(q2, d2)
+    slot_details = cursor.fetchall()
+    print(slot_details)
+    car_check_flag = True
+    while(True):
+     if(slot_details[0][0] == 1):
+     	if(slot_details[0][2]):
+     		resdict["status"] = 3
+     		return JsonResponse(resdict)
+     	print("check if")
+     	q3 = "UPDATE Slots SET ReservationID = %s, EndTime = %s, CNNFlag = %s WHERE SlotID = %s"
+     	d3 = (reservation_id, endtime,0, curr_slot)
+     	cursor.execute(q3, d3)
+     	cursor.close()
+     	db.commit()
+     	db.close()
+     	break
+     else:
+     	if car_check_flag:
+     	 time.sleep(CNNDELAY)
+     	 car_check_flag = False
+     	else:
+     	 print("no car detected")
+     	 resdict["status"] = 4
+     	 return JsonResponse(resdict)
+    print("booking confirmed")
+    return JsonResponse(resdict)
+   else:
+    resdict["status"]=2
+    print("you have not booked seat")
+    return JsonResponse(resdict) 
+  else:
+   resdict["status"]=0
+   return JsonResponse(resdict)	
+  		

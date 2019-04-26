@@ -21,7 +21,7 @@ from django.contrib import admin
 
 
 urlpatterns = [
-# url(r'^z',  include('background_app.urls')),
+ #url(r'^',  include('background_app.urls')),
     url(r'grid/', include('gridapp.urls')),
  url(r'getdata/', include('gridapp.urls')),
    
