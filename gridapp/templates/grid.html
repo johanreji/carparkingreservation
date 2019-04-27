@@ -431,7 +431,7 @@ var d = new Date();
            console.log(data);
         }
      })
-}, 2000);
+}, 50000);
 {% endif %}
 // window.onload = signupalert();
 
@@ -463,15 +463,15 @@ var scanner
 function qrScanner(){
       scanner = new Instascan.Scanner({ video: document.getElementById('preview'),refractoryPeriod:2000 });
       scanner.addListener('scan', function (content) {
+        scanner.stop()
         console.log(content);
         //closeScanner(true, content);
         var qrReq=new XMLHttpRequest;
         XMLHttpRequest.responseType="json";
         qrReq.onload = function(){
           var res=JSON.parse(this.response);
-          console.log("res " + res)
-          alert(this.response);
-          var status = parseInt(res[status])
+          //alert(this.response);
+          var status = parseInt(res["status"])
           var message = "internal error"
           if(status == 1){
             message = "Reservation Done"
@@ -516,20 +516,21 @@ function closeScanner(){
 }
 function qrClick(){
   qrScanner()
-  $("#myModal").modal();  
+  $("#myModal").modal("show");  
+  
 }
 </script>
 
 <script>
-  $(document).ready(function(){
-  // Show the Modal on load
-  //$("#myModal").modal("show");
+//   $(document).ready(function(){
+//   // Show the Modal on load
+//   //$("#myModal").modal("show");
     
-  // Hide the Modal
-  function closeScanner(flag, data){
-  scanner.stop();
-  $("#myModal").modal("hide");
-}
-});
+//   // Hide the Modal
+//   function closeScanner(flag, data){
+//   scanner.stop();
+//   $("#myModal").modal("hide");
+// }
+// });
 
   </script>

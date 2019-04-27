@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'background_task',
     'gridapp',
     'registerapp',
+    'accounts',
     #'django_rq',
     #'scheduler',
 ]
@@ -56,6 +57,7 @@ MIDDLEWARE = [
 
     
 ]
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'bookmyslot.urls'
 

@@ -5,6 +5,7 @@ from gridapp import views
 
 
 urlpatterns = [
+      url(r'^$', views.grid, name="home"),
       url(r'grid', views.grid, name='grid'),
       url(r'scan', views.scan, name='scan'),
       url(r'getdata', views.getdata, name='getdata'),
