@@ -43,17 +43,18 @@ def getdata(request):
   for i in range(slot_len):
    if(datatuple[i][1]=="True" and result[i][1]==0):
     print("change")
-    q="""UPDATE Slots SET occupied = %s, CNNFlag = %s, CNNTimestamp = %s WHERE SlotID = %s ;"""
-    d=(1,1,cnnts,datatuple[i][0])
+    q="""UPDATE Slots SET occupied = %s, CNNFlag = %s, CNNTimestamp = %s, confidence = %s WHERE SlotID = %s ;"""
+    d=(1,1,cnnts,0,datatuple[i][0])
     cursor.execute(q,d) 
    elif(datatuple[i][1]=="False" and result[i][1]==1):
     print("change to free : ", datatuple[i][0])
-    q="""UPDATE Slots SET occupied = %s, CNNFlag = %s, CNNTimestamp = %s WHERE SlotID = %s ;"""
-    d=(0,1,cnnts,datatuple[i][0])
+    q="""UPDATE Slots SET occupied = %s, CNNFlag = %s, CNNTimestamp = %s, confidence = %s WHERE SlotID = %s ;"""
+    d=(0,1,cnnts,0,datatuple[i][0])
     cursor.execute(q,d) 
    else:
     print("no change")
   db.commit()
+  cursor.close()
   db.close()
   return HttpResponse("succs")
 
@@ -153,9 +154,10 @@ def grid(request):
       if res:
         return render(request, "grid.html", {"result" : result , "res":res,"sta":sta,"stat":stat,"name":name})
       else:
-        return render(request, "grid.html", {"result" : result,"sta":sta,"stat":stat,"name":name})
+        return render(request, "grid.html", {"result" : result,"sta":sta,"stat":stat,"name":name, })
  else:
-  return render(request, "grid.html", {"result" : result , "res":res})
+  print("alert checking")
+  return render(request, "grid.html", {"result" : result , "res":res,})
 
 @csrf_exempt
 def scan(request):

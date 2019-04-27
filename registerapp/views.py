@@ -73,14 +73,19 @@ def register(request):
  q="""UPDATE Reservation SET ReservationStatus = %s WHERE ReservationID=%s ;"""
  d=(1,reservation_id)
  cursor.execute(q,d)
+ count = cursor.rowcount
  cursor.close()
  db.commit()
  db.close()
  stat=request.session.setdefault('loggedin',0)
  name=request.session.setdefault('name',"user")
  sustatus=1
- response = redirect('/bookings/bookings')
- return response
+ if count > 0:
+  response = redirect('/bookings/bookings')
+  return response
+ else:
+  response = redirect('/grid/grid' , {'alert':"Payment session timed out please book again"}) 
+  return response
  # , {"sustatus" : sustatus,"sistatus" : 0 }
  # return render(request, "result.html",{"slot":slot,"st":st,"et":et,"name":name,"rid":rid[0],"stat":stat})
 

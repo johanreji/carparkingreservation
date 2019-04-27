@@ -253,6 +253,19 @@ background: transparent; / optional: just make scrollbar invisible /
 
 
 	<div class="container">
+    {% if alert %}
+    <div class="alert alert-info alert-dismissible">
+     <button type="button" class="close" data-dismiss="alert">&times;</button>
+     <strong>Sorry</strong> {{alert}}
+    </div>
+    {% endif %}
+    <div id = "booking_alert" style="display:none;">
+       <div class="alert alert-info alert-dismissible">
+     <a class = "close" href = "#" onclick="$('#booking_alert').css('display', 'none')">x</a>
+     <div id = "message">
+      </div>
+    </div>  
+    </div>
 <form class="form-inline" action="" method="POST">
 	<div class="form-group">
   <label style=" font-size: 15px; color: white;  margin: 0;">Start Date:</label>
@@ -458,6 +471,26 @@ function qrScanner(){
           var res=JSON.parse(this.response);
           console.log("res " + res)
           alert(this.response);
+          var status = parseInt(res[status])
+          var message = "internal error"
+          if(status == 1){
+            message = "Reservation Done"
+          }
+          else if(status == 2){
+            message = "Please book a seat before scanning"
+          }
+          else if(status == 3){
+            message = "Already reserved"
+          }
+          else if(status == 4){
+            message = "Vehicle is not detected, you have to park the vehicle before scanning"
+          }
+          var alertElement = document.getElementById("booking_alert")
+          $('#booking_alert').show()
+          $('#booking_alert').css('display', 'block');
+          var messageElement = document.getElementById("message")
+          messageElement.innerHTML = message
+    
           closeScanner();
         }
       var data=JSON.stringify({"slot_id":content});

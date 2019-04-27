@@ -212,6 +212,14 @@ CELERY_BEAT_SCHEDULE = {
     },
     'detect_exit':{
     'task':'gridapp.tasks.detect_exit',
-    'schedule': crontab(minute = '*/2'),
+    'schedule': crontab(minute = '*/5'),
+    },
+    'detect_not_exiting':{
+    'task':'gridapp.tasks.detect_not_exiting',
+    'schedule': crontab(minute = '*/5'),
+    },
+    'detect_unauthorized_parkings':{
+    'task':'gridapp.tasks.detect_unauthorized_parkings',
+    'schedule': crontab(minute = '*/5'),
     },
 }
