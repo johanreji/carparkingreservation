@@ -26,6 +26,7 @@ urlpatterns = [
    url(r'master/',  include('master.urls')),
    url(r'addslot/',  include('master.urls')),
    url(r'cropper/',  include('master.urls')),
+   url(r'addarea/',  include('master.urls')),
     url(r'^admin/', admin.site.urls),
      url(r'registerform/',  include('registerapp.urls')),
     url(r'register/',  include('registerapp.urls')),

@@ -9,6 +9,12 @@
 </head>
 <body>
 <a href="/grid/grid">home</a>
+<form action="/addarea/addarea" method="POST" enctype="multipart/form-data">
+
+  <input  type="text" name="width">
+  <input   type="text" name="height">
+  <input type="submit" >
+</form>
 	<div>
   <img id="image" src="/master/media/bg.jpg">
 </div>
@@ -20,6 +26,7 @@
 	<input id="height"  type="text" name="height">
 	<input type="submit" >
 </form>
+
 
 
 
@@ -45,5 +52,9 @@ const cropper = new Cropper(image, {
     console.log(event.detail.height);
 
   },
+});
+image.addEventListener('cropstart', (event) => {
+
+  event.detail.action='crop';
 });
 </script>

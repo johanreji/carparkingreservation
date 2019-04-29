@@ -64,6 +64,8 @@ def grid(request):
  result = cursor.fetchall()
  print("sivane--",result)
  res=cur.fetchall()
+ cursor.execute('SELECT width,height FROM area')
+ area=cursor.fetchone()
  db.close()
  
  if(request.method=="POST"):
@@ -95,17 +97,17 @@ def grid(request):
    o=tuple(set(o))
    print("aaa",a)
    print("ooo",o)
-   for i in a:
+   for (i,j) in zip(a,result):
     if( i in o):
-     r=r+((i,1),)
+     r=r+((i,1,j[2],j[3],j[4],j[5]),)
     else:
-     r=r+((i,0),) 
-    print(r)
+     r=r+((i,0,j[2],j[3],j[4],j[5]),)
+    print("TESTTTT!!!",r)
 
-   return render(request, "grid.html", {"result" : r , "res":res,"st":st,"et":et,"stat":stat,"name":name})
+   return render(request, "grid.html", {"result" : r , "res":res,"st":st,"et":et,"stat":stat,"name":name,"area":area})
   else: 
    r=()
-   return render(request, "grid.html", {"result" : result , "res":r,"st":st,"et":et,"stat":stat,"name":name})
+   return render(request, "grid.html", {"result" : result , "res":r,"st":st,"et":et,"stat":stat,"name":name,"area":area})
 
 
  elif request.method=="GET":
@@ -126,11 +128,11 @@ def grid(request):
       name=request.session.setdefault('name',"user")
       print(result)
       if res:
-        return render(request, "grid.html", {"result" : result , "res":res,"sta":sta,"stat":stat,"name":name})
+        return render(request, "grid.html", {"result" : result , "res":res,"sta":sta,"stat":stat,"name":name,"area":area})
       else:
-        return render(request, "grid.html", {"result" : result,"sta":sta,"stat":stat,"name":name})
+        return render(request, "grid.html", {"result" : result,"sta":sta,"stat":stat,"name":name,"area":area})
  else:
-  return render(request, "grid.html", {"result" : result , "res":res})
+  return render(request, "grid.html", {"result" : result , "res":res,"area":area})
 
 
 
