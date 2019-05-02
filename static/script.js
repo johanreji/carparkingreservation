@@ -1,174 +1,146 @@
 
-var userposition=null;
-var mymap=null;
-var markerlist=new Object();
-var previd=null;
 
-var greenIcon=L.icon({iconUrl:'wastebin.png', iconSize:     [30, 50], // size of the icon
-    // size of the shadow
-    iconAnchor:   [15, 25], // point of the icon which will correspond to marker's location
-   // the same for the shadow
-    popupAnchor:  [-3, -10] // point from which the popup should open relative to the iconAnchor})
-    });
+function test(box,x){
+  
+ var element;
+   
+  
+  for(var i=0;i<=3;i++){
 
-var redIcon=L.icon({iconUrl:'wastebin1.png', iconSize:     [25, 42], // size of the icon
-    // size of the shadow
-    iconAnchor:   [15, 25], // point of the icon which will correspond to marker's location
-   // the same for the shadow
-    popupAnchor:  [-3, -10] // point from which the popup should open relative to the iconAnchor})
-    });
-// window load function
-function myfunc(){
-	mymap = L.map('mapid').fitWorld();
-	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-		maxZoom: 18,
-		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-		id: 'mapbox.streets'
-	}).addTo(mymap);
-
-	 if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(getposition, errorPosition, {maximumAge:600000, timeout:5000, enableHighAccuracy: true});
+    element = document.getElementById("r"+i);
+    element.style.fill="";
+  }
+   element = document.getElementById("r"+x);
+   if(element.style.fill==="orange"){
+    element.style.fill="";
     }
     else{
-	 errorPosition();
-	}
+      element.style.fill="orange";
+    }
+  //  document.getElementById("st").value=document.getElementById("stime").value;
+  //  document.getElementById("et").value=document.getElementById("etime").value;
+    document.getElementById("slotselected").value=x;
+
+}
+function al(){
+    alert("Please log in.");
 }
 
+ function validate(stat){
+    if((document.getElementById('st').value=="") || (document.getElementById('et').value=="") ||(document.getElementById("slotselected").value=="") || (document.getElementById('dst').value=="") 
+    || (document.getElementById('det').value=="") ){
+        alert("Enter Start time and End time");
+        return false
+    }
+    if(stat){
+        return true;
+    }
+    else{
+        alert("Please login or sign up.");
+        return false;
+    }
+ }
 
-// get user cordinates
-function getposition(position){
-	userposition=position;
-    console.log(position.coords.accuracy);
-    var rad=position.coords.accuracy/2;
-    var circle = L.circle([position.coords.latitude,position.coords.longitude], {
-    color: 'red',
-    fillColor: '#f03',
-    fillOpacity: 0.2,
-    radius: rad,
-}).addTo(mymap).bindPopup("Current Location");
+const resetdate = function() {
+var d = new Date();
+  document.getElementById("stime").defaultValue = d.getHours()+":"+d.getMinutes();
+  document.getElementById('st').value = document.getElementById('stime').value;
+  document.getElementById('et').value = document.getElementById('etime').value;
 
+};
 
-	getmap( position.coords.latitude, position.coords.longitude);
-}
-
-// get cordinates of first bin from database
-function errorPosition(error){
-	alert("location denied");
-}
-
-// display the map using cordinates
-function getmap(lat, long){
-	mymap.setView([lat, long], 12);
-	getBin(mymap);
-}
-
-// get Bin locations from database
-function getBin(mymap){
-	var oReq = new XMLHttpRequest;
-	XMLHttpRequest.responseType="json";
-	oReq.onload = function(){
-		//alert(this.response);
-		var res=JSON.parse(this.response);
-        if(res){
-		  addMarker(mymap, res);
-        }  
-	};
-	oReq.open("get", "get_garbage_bin_cordinates.php");
-	oReq.send();
-}
-
-// add markers to bin locations
-function addMarker(mymap, binArray){
-	for(var obj in binArray){
-		if(binArray.hasOwnProperty(obj)){
-			let marker=L.marker([binArray[obj]["latitude"],binArray[obj]["longitude"]]).addTo(mymap);
-			marker.setIcon(redIcon);
-			markerlist[obj]=marker;
-			marker.bindPopup("Level : "+ binArray[obj]["level"] + "  ID: " + binArray[obj]["id"]);
-		}		
-
-	}
-}
-
-function getLoc(){
-	if(userposition){
-		mymap.setView([userposition.coords.latitude, userposition.coords.longitude],12);
-		var oReq = new XMLHttpRequest(); //New request object
-	    XMLHttpRequest.responseType = "json";
-   		oReq.onload = function() {
-        //This is where you handle what to do with the response.
-        //The actual data is found on this.responseText
-        var res=JSON.parse(this.response);
-        if(res){
-        if(previd!=null){
-        	markerlist[previd].setIcon(redIcon);
+const gridpoll = function(){
+    //var catid;
+    //catid = $(this).attr("data-catid");
+    $.ajax(
+    {
+        type:"GET",
+        url: "/grid/grid/",
+        dataType : 'json',
+          data:{
+                 status:"true",
+        }, 
+        
+        success: function( data ) 
+        {
+          
+            for(var i=0;i<=3;i++){
+              element = document.getElementById("r"+i);
+                if (data[i]==1){
+                  console.log(data[i]);
+                  element.classList.add("redrect");
+                  element.classList.remove("greenrect");
+                }
+                else{
+                  console.log("two");
+                  element.classList.add("greenrect");
+                  element.classList.remove("redrect");
+                }
+          }
+          console.log(data[0]);
+           console.log(typeof data);
+           console.log(data);
         }
-        let curid=res["id"];
-        previd=curid;
-        var toggle=true;
-        setInterval(function(){ 
-        	if(toggle){
-        		markerlist[curid].setIcon(greenIcon);
-        	}
-        	else{
-        		markerlist[curid].setIcon(redIcon);
-        	}
-        	toggle=!toggle;
-         }, 2000);
-        }
-        //markerlist[curid].setIcon(greenIcon);
+     })
+};
 
-        //alert(this.response);
-    	};
-    oReq.open("post", "getnearestbin.php", true);
-    oReq.setRequestHeader("Content-Type", "application/json");
-    var data = JSON.stringify({"lat": userposition.coords.latitude, "long": userposition.coords.longitude});
-    oReq.send(data);
-	}
-	else{
-		alert("geolocation not avaliable");
-	}
+
+
+
+function closeScanner(scanner){
+  //scanner.stop()
+  $("#scanModal").hide();
 }
 
-var scanner;
-function qrScanner(){
-	 scanner = new Instascan.Scanner({ video: document.getElementById('preview'),refractoryPeriod:2000 });
-      scanner.addListener('scan', function (content) {
+function scannerCallback(content){
         console.log(content);
         var qrReq=new XMLHttpRequest;
         XMLHttpRequest.responseType="json";
         qrReq.onload = function(){
-        	var res=JSON.parse(this.response);
-        	var pcode=res["promocode"];
-        	//alert(this.response);
-        	closeScanner(true, pcode);
+          scanner.stop();
+          var res=JSON.parse(this.response);
+          var status = parseInt(res["status"])
+          var message = "internal error"
+          if(status == 1){
+            message = "Reservation Done"
+          }
+          else if(status == 2){
+            message = "Please book a seat before scanning"
+          }
+          else if(status == 3){
+            message = "Already reserved"
+          }
+          else if(status == 4){
+            message = "Vehicle is not detected, you have to park the vehicle before scanning"
+          }
+          else if(status == -1){
+            message = "Please log in to confirm reservation"
+          }
+          document.getElementById("booking_alert").style.display="inline-block";
+          document.getElementById("message").innerHTML=message;
+          closeScanner(scanner);
         }
-        var data=JSON.stringify({"id":content});
-        qrReq.open("post", "getpromocode.php", true);
-    	qrReq.setRequestHeader("Content-Type", "application/json");
-    	qrReq.send(data);
-      });
-      Instascan.Camera.getCameras().then(function (cameras) {
-        if (cameras.length > 0) {
-          scanner.start(cameras[0]);
-        } else {
-          console.error('No cameras found.');
-        }
-      }).catch(function (e) {
-        $("#myModal").modal("hide");
-        console.error(e);
-      });
+      var data=JSON.stringify({"slot_id":content});
+      qrReq.open("post", "/grid/scan/", true);
+      qrReq.setRequestHeader("Content-Type", "application/json");
+      qrReq.send(data);
+      }
+// function qrScanner(scanner){
+//       scanner.addListener('active', );
+//       Instascan.Camera.getCameras().then(function (cameras) {
+//         if (cameras.length > 0) {
+//           scanner.start(cameras[0]);
+//         } else {
+//           console.error('No cameras found.');
+//         }
+//       }).catch(function (e) {
+//         $("scanModal").hide()
+//         console.error(e);
+//       });
+// }
+
+function closeAlertBox(){
+  document.getElementById("booking_alert").style.display="none";
+  document.getElementById("message").innerHTML="";
 }
 
-function closeScanner(flag, data){
-	scanner.stop();
-    if(flag){
-        $("#promop").children('span').text(data);
-        $("#myModal").modal("hide");
-        $("#promomodal").modal();
-    }
-	
-
-}

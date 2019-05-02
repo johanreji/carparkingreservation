@@ -18,12 +18,12 @@ from django.conf.urls import url
 from django.conf.urls import include
 from django.contrib import admin
 
-
+from django.views.generic.base import TemplateView
 
 urlpatterns = [
- #url(r'^',  include('background_app.urls')),
     url(r'accounts/', include('accounts.urls')),
-    url(r'^', include('gridapp.urls')),
+    url(r'accounts/', include('django.contrib.auth.urls')),
+    #url(r'^', include('gridapp.urls')),
     url(r'grid/', include('gridapp.urls')),
  url(r'getdata/', include('gridapp.urls')),
    

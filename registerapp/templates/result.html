@@ -1,31 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title></title>
- <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-  <script>
-  	(function(window, location) {
-history.replaceState(null, document.title, location.pathname+"#!/history");
-history.pushState(null, document.title, location.pathname);
+{% extends 'base.html' %}
 
-window.addEventListener("popstate", function() {
-  if(location.hash === "#!/history") {
-    history.replaceState(null, document.title, location.pathname);
-    setTimeout(function(){
-      location.replace("/grid/grid");
-    },0);
-  }
-}, false);
-}(window, location));
-  </script>
-</head>
+{% block content %}
 
-<style>
+
+<style type="text/css">
 
 	 body{
   background-color: #000000;
@@ -407,99 +385,6 @@ color: #525252;
 </style>
 <body>
 <!-- <div class="fakeLoader"></div> -->
-<div class="loading">Loading&#8230;</div>
-
- <nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span> 
-      </button>
-      <a class="navbar-brand" href="/grid/grid">Book My Slot</a>
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-    <ul class="nav navbar-nav">
-      <li ><a href="/grid/grid">Home</a></li>
-      
-      <li class="active"><a href="#">My Bookings</a></li>
-      <li><a href="">Scan</a></li>
-    </ul>
-    <ul class="nav navbar-nav navbar-right">
-      {% if stat %} 
-      <li><a style="pointer-events: none; cursor: default"><span class="glyphicon glyphicon-user"></span> {{name}}</a></li>
-      <li><a  type="button"  data-toggle="modal" data-target="#logoutModal"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
-        {% else %}   
-      <li><a type="button"  data-toggle="modal" data-target="#signupModal"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-      <li><a  type="button"  data-toggle="modal" data-target="#loginModal"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-      {% endif %} 
-    </ul>
-  </div>
-
-  </div>
-</nav>
-<div class="modal fade" id="logoutModal" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        
-        <div class="modal-body">
-          <h4>Are you sure you want to log out?</h4>
-        
-        </div>
-        <div class="modal-footer">
-          <button onclick="window.location.href='/logout/logout'" type="submit" class="btn btn-primary" >Yes</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-        </div>
-      </div>
-      
-    </div>
-  </div>
-
-
-<!-- <div class="col-md-12 col-sm-12 col-lg-4 col-lg-offset-4"> -->
-<!-- {% for item in result %}
-        <div class="cardWrap">
-  <div class="card cardLeft">
-    <h1>Book My Slot</h1>
-    <div class="title">
-      <h2>{{item.1}}</h2>
-      <span>Slot Number</span>
-    </div>
-    <div class="name">
-      <h2>{{name}}</h2>
-      <span>name</span>
-    </div>
-    <div class="seat">
-      <h2>{{item.2.time}}</h2>
-      <span>Start Time</span>
-    </div>
-    <div class="time">
-      <h2>{{item.3.time}}</h2>
-      <span>End Time</span>
-    </div>
-
-  </div>
-  <div class="card cardRight">
-    
-    <button class="cancel"> -->
-      <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#FFFFFF" d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/></svg> -->
-<!--         Cancel
-      </button>
-  
-    <div class="number">
-      <h3>{{item.0}}</h3>
-      <span>ID</span>
-    </div>
-    <div class="barcode"></div>
-  </div>
-
-</div>
-    {% endfor %} -->
-
-<!-- </div> -->
 <div class="container">
   <div class="table-responsive" style="border: none;">          
   <table class="table" id="mytab1" style="color: white;">
@@ -532,31 +417,16 @@ color: #525252;
   </div>
 </div>
 
-</body>
-</html>
 <script type="text/javascript">
 
+$(document).ready(function(){
 setInterval(function() {
-// var d = new Date();
-// var t={{item.2.time}};
-// var ct=d.getHours()+":"+d.getMinutes();
-//   if(t >= ct ){
-//     document.getElementById("cancelbtn").disabled = true;
-
-//   }
-//   var table = document.getElementById("mytab1");
 for (var i = 1, row; row = table.rows[i]; i++) {
-
-   // for (var j = 0, col; col = row.cells[j]; j++) {
-      
-   // } 
    var d = new Date();
     var t=document.getElementsByClassName("table")[0].rows[i].cells[2];
     var ct=d.getHours()+":"+d.getMinutes();
     if(t >= ct ){
-    // document.getElementsByClassName("table")[0].rows[i].cells[5].childNodes[0].disabled = true;
     document.getElementsByClassName("table")[0].rows[i].cells[4].style.backgroundColor="green";
-
   } 
 }
  
@@ -566,49 +436,22 @@ setTimeout(function(){
   document.getElementsByClassName("loading")[0].style.display="none";
 
  }, 3000);
-// !function(d) {
-//     d.fakeLoader = function(i) {
-//         var s = d.extend({
-//             targetClass: "fakeLoader",
-//             timeToHide: 3000,
-//             bgColor: "#2ecc71",
-//             spinner: "spinner2"
-//         }, i)
-//           , c = '<div class="fl fl-spinner spinner1"><div class="double-bounce1"></div><div class="double-bounce2"></div></div>'
-//           , e = d("body").find("." + s.targetClass);
-//         e.each(function() {
-//             switch (s.spinner) {
-//             case "spinner1":
-//                 e.html(c);
-//                 break;
-//             case "spinner2":
-//                 e.html('<div class="fl fl-spinner spinner2"><div class="spinner-container container1"><div class="circle1"></div><div class="circle2"></div><div class="circle3"></div><div class="circle4"></div></div><div class="spinner-container container2"><div class="circle1"></div><div class="circle2"></div><div class="circle3"></div><div class="circle4"></div></div><div class="spinner-container container3"><div class="circle1"></div><div class="circle2"></div><div class="circle3"></div><div class="circle4"></div></div></div>');
-//                 break;
-//             case "spinner3":
-//                 e.html('<div class="fl fl-spinner spinner3"><div class="dot1"></div><div class="dot2"></div></div>');
-//                 break;
-//             case "spinner4":
-//                 e.html('<div class="fl fl-spinner spinner4"></div>');
-//                 break;
-//             case "spinner5":
-//                 e.html('<div class="fl fl-spinner spinner5"><div class="cube1"></div><div class="cube2"></div></div>');
-//                 break;
-//             case "spinner6":
-//                 e.html('<div class="fl fl-spinner spinner6"><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div></div>');
-//                 break;
-//             case "spinner7":
-//                 e.html('<div class="fl fl-spinner spinner7"><div class="circ1"></div><div class="circ2"></div><div class="circ3"></div><div class="circ4"></div></div>');
-//                 break;
-//             default:
-//                 e.html(c)
-//             }
-//         }),
-//         e.css({
-//             backgroundColor: s.bgColor
-//         }),
-//         setTimeout(function() {
-//             d(e).fadeOut()
-//         }, s.timeToHide)
-//     }
-// }(jQuery);
+
+(function(window, location) {
+history.replaceState(null, document.title, location.pathname+"#!/history");
+history.pushState(null, document.title, location.pathname);
+
+window.addEventListener("popstate", function() {
+  if(location.hash === "#!/history") {
+    history.replaceState(null, document.title, location.pathname);
+    setTimeout(function(){
+      location.replace("/grid/grid");
+    },0);
+  }
+}, false);
+}(window, location));
+});
 </script>
+
+{% endblock %}
+

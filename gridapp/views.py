@@ -30,7 +30,7 @@ def getdata(request):
                                 database='bookmyslot')
   cursor = db.cursor()
   #cur= db.cursor()
-  cursor.execute('SELECT SlotID,occupied FROM Slots')
+  cursor.execute('SELECT SlotID,occupied, confidence FROM Slots')
   result = cursor.fetchall()
   
   for i, j in details.items():
@@ -40,6 +40,7 @@ def getdata(request):
    detailsplain[k]=l
   datatuple=tuple(detailsplain.items())
   slot_len=len(datatuple)
+  
   for i in range(slot_len):
    if(datatuple[i][1]=="True" and result[i][1]==0):
     print("change")
@@ -49,10 +50,13 @@ def getdata(request):
    elif(datatuple[i][1]=="False" and result[i][1]==1):
     print("change to free : ", datatuple[i][0])
     q="""UPDATE Slots SET occupied = %s, CNNFlag = %s, CNNTimestamp = %s, confidence = %s WHERE SlotID = %s ;"""
-    d=(0,1,cnnts,0,datatuple[i][0])
+    d=(0,0,cnnts,0,datatuple[i][0])
     cursor.execute(q,d) 
    else:
     print("no change")
+    q="""UPDATE Slots SET confidence = %s WHERE SlotID = %s ;"""
+    d=(result[i][2] + 1, datatuple[i][0])
+    cursor.execute(q, d)
   db.commit()
   cursor.close()
   db.close()
@@ -163,8 +167,6 @@ def grid(request):
 def scan(request):
  resdict={}
  try:
-  # stat=request.session.setdefault('loggedin',0)
-  # name=request.session.setdefault('name',"user")
   user_id=request.session["customerid"]
  except Exception:
   resdict["status"]=-1

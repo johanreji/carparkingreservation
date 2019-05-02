@@ -109,11 +109,23 @@ def signup(request):
  # cursor.execute(q)
  # result = cursor.fetchall()
  # print(result)
- cursor.execute(q,d)
+ affected_count = cursor.execute(q,d)
  try:
     transaction.commit_unless_managed()
  except:
-    response = redirect('/grid/grid?sta=1')
+    try:
+     db.commit()
+     request.session['loggedin'] = 1
+     request.session['name'] = name
+     request.session['customerid'] = cursor.lastrowid
+     response = redirect('/grid/grid')
+
+    except mysql.connector.Error as err:
+     request.session['loggedin'] = 0
+     print("login err : ", err)
+     response = redirect('/grid/grid?sta=2')
+    finally:
+       cursor.close()
  else:
     response = redirect('/grid/grid?sta=2')
  db.commit()
@@ -145,12 +157,15 @@ def login(request):
       request.session['name'] = result[1]
       request.session['customerid'] = result[2]
       response = redirect('/grid/grid')
+      print("check1")
     else:
       request.session['loggedin'] = 0
       response = redirect('/grid/grid')
+      print("check1")
 
  else:
     response = redirect('/grid/grid?stat=2')
+    print("check1")
  db.commit()
  db.close()
 

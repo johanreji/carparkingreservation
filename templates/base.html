@@ -1,0 +1,312 @@
+{% load static %}
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ 
+  <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script> -->
+  
+
+
+
+
+    <style>
+
+.greenrect{
+fill:#16ff01;
+}
+.redrect{
+  fill: #ff0000;
+}
+
+.green{
+background-color : green;
+}
+.red{
+background-color : red;
+}
+
+
+body{
+  background-color: #000000;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='30' viewBox='0 0 1000 120'%3E%3Cg fill='none' stroke='%23222' stroke-width='5.1' %3E%3Cpath d='M-500 75c0 0 125-30 250-30S0 75 0 75s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 45c0 0 125-30 250-30S0 45 0 45s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 105c0 0 125-30 250-30S0 105 0 105s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 15c0 0 125-30 250-30S0 15 0 15s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500-15c0 0 125-30 250-30S0-15 0-15s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 135c0 0 125-30 250-30S0 135 0 135s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3C/g%3E%3C/svg%3E");
+}
+.bg{
+background-color: #11aa44;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='275' height='275' viewBox='0 0 200 200'%3E%3Cg fill='none' stroke='%237F3' stroke-width='1.4' stroke-opacity='0.1'%3E%3Crect x='-40' y='40' width='75' height='75'/%3E%3Crect x='-35' y='45' width='65' height='65'/%3E%3Crect x='-30' y='50' width='55' height='55'/%3E%3Crect x='-25' y='55' width='45' height='45'/%3E%3Crect x='-20' y='60' width='35' height='35'/%3E%3Crect x='-15' y='65' width='25' height='25'/%3E%3Crect x='-10' y='70' width='15' height='15'/%3E%3Crect x='-5' y='75' width='5' height='5'/%3E%3Crect width='35' height='35'/%3E%3Crect x='5' y='5' width='25' height='25'/%3E%3Crect x='10' y='10' width='15' height='15'/%3E%3Crect x='15' y='15' width='5' height='5'/%3E%3Crect x='40' width='75' height='75'/%3E%3Crect x='45' y='5' width='65' height='65'/%3E%3Crect x='50' y='10' width='55' height='55'/%3E%3Crect x='55' y='15' width='45' height='45'/%3E%3Crect x='60' y='20' width='35' height='35'/%3E%3Crect x='65' y='25' width='25' height='25'/%3E%3Crect x='70' y='30' width='15' height='15'/%3E%3Crect x='75' y='35' width='5' height='5'/%3E%3Crect x='40' y='80' width='35' height='35'/%3E%3Crect x='45' y='85' width='25' height='25'/%3E%3Crect x='50' y='90' width='15' height='15'/%3E%3Crect x='55' y='95' width='5' height='5'/%3E%3Crect x='120' y='-40' width='75' height='75'/%3E%3Crect x='125' y='-35' width='65' height='65'/%3E%3Crect x='130' y='-30' width='55' height='55'/%3E%3Crect x='135' y='-25' width='45' height='45'/%3E%3Crect x='140' y='-20' width='35' height='35'/%3E%3Crect x='145' y='-15' width='25' height='25'/%3E%3Crect x='150' y='-10' width='15' height='15'/%3E%3Crect x='155' y='-5' width='5' height='5'/%3E%3Crect x='120' y='40' width='35' height='35'/%3E%3Crect x='125' y='45' width='25' height='25'/%3E%3Crect x='130' y='50' width='15' height='15'/%3E%3Crect x='135' y='55' width='5' height='5'/%3E%3Crect y='120' width='75' height='75'/%3E%3Crect x='5' y='125' width='65' height='65'/%3E%3Crect x='10' y='130' width='55' height='55'/%3E%3Crect x='15' y='135' width='45' height='45'/%3E%3Crect x='20' y='140' width='35' height='35'/%3E%3Crect x='25' y='145' width='25' height='25'/%3E%3Crect x='30' y='150' width='15' height='15'/%3E%3Crect x='35' y='155' width='5' height='5'/%3E%3Crect x='200' y='120' width='75' height='75'/%3E%3Crect x='40' y='200' width='75' height='75'/%3E%3Crect x='80' y='80' width='75' height='75'/%3E%3Crect x='85' y='85' width='65' height='65'/%3E%3Crect x='90' y='90' width='55' height='55'/%3E%3Crect x='95' y='95' width='45' height='45'/%3E%3Crect x='100' y='100' width='35' height='35'/%3E%3Crect x='105' y='105' width='25' height='25'/%3E%3Crect x='110' y='110' width='15' height='15'/%3E%3Crect x='115' y='115' width='5' height='5'/%3E%3Crect x='80' y='160' width='35' height='35'/%3E%3Crect x='85' y='165' width='25' height='25'/%3E%3Crect x='90' y='170' width='15' height='15'/%3E%3Crect x='95' y='175' width='5' height='5'/%3E%3Crect x='120' y='160' width='75' height='75'/%3E%3Crect x='125' y='165' width='65' height='65'/%3E%3Crect x='130' y='170' width='55' height='55'/%3E%3Crect x='135' y='175' width='45' height='45'/%3E%3Crect x='140' y='180' width='35' height='35'/%3E%3Crect x='145' y='185' width='25' height='25'/%3E%3Crect x='150' y='190' width='15' height='15'/%3E%3Crect x='155' y='195' width='5' height='5'/%3E%3Crect x='160' y='40' width='75' height='75'/%3E%3Crect x='165' y='45' width='65' height='65'/%3E%3Crect x='170' y='50' width='55' height='55'/%3E%3Crect x='175' y='55' width='45' height='45'/%3E%3Crect x='180' y='60' width='35' height='35'/%3E%3Crect x='185' y='65' width='25' height='25'/%3E%3Crect x='190' y='70' width='15' height='15'/%3E%3Crect x='195' y='75' width='5' height='5'/%3E%3Crect x='160' y='120' width='35' height='35'/%3E%3Crect x='165' y='125' width='25' height='25'/%3E%3Crect x='170' y='130' width='15' height='15'/%3E%3Crect x='175' y='135' width='5' height='5'/%3E%3Crect x='200' y='200' width='35' height='35'/%3E%3Crect x='200' width='35' height='35'/%3E%3Crect y='200' width='35' height='35'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+   
+input[type=time] {
+  width: 100px;
+  padding: 5px 5px;
+  margin: 8px 10px;
+  display: inline;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  border-bottom: 2px solid #e7e7e7  ;
+  text-align: center;
+
+}
+.button4 {
+  background-color: white;
+  color: black;
+  border: none; 
+  border-radius: 10px;
+
+  
+  padding:  5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  cursor: pointer;
+
+}
+
+.button4:hover {background-color: #e7e7e7;}
+
+
+
+.bg{
+	width: 435px;
+
+}
+
+::-webkit-scrollbar {
+width: 0px; /* remove scrollbar space /
+background: transparent; / optional: just make scrollbar invisible /
+}
+
+    </style>
+   
+</head>
+<body >
+  <!-- Scan Modal -->
+    <div class="modal" id="scanModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Scan QR Code</h4>
+          <button type="button" onclick="closeScanner(scanner)" class="close closeQr">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+            
+            <div class = "errmsg">
+            </div>
+            <video id="preview" class="embed-responsive-item" width="80%", height="50%"
+            style="margin:0 auto;"></video>
+          
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger closeQr" onclick="closeScanner(scanner)">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Logout Modal -->
+  <div class="modal fade" id="logoutModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        
+        <div class="modal-body">
+          <h4>Are you sure you want to log out?</h4>
+        
+        </div>
+        <div class="modal-footer">
+          <button onclick="window.location.href='/logout/logout'" type="submit" class="btn btn-primary" >Yes</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div class="modal fade" id="loginModal" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Log In</h4>
+        </div>
+        <form action="/login/login" method="POST">
+        <div class="modal-body">
+        <div class="form-group">
+          <label>Email address:</label>
+          <input type="email" class="form-control" name="email">
+        </div>
+        <div class="form-group">
+          <label>Password:</label>
+          <input type="password" class="form-control" name="password">
+        </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" >Login</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+        </form>
+      </div>
+  </div>
+</div>
+
+ <!-- SignUP Modal -->
+<div class="modal fade" id="signupModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Sign Up</h4>
+        </div>
+        <form action="/signup/signup" method="POST">
+        <div class="modal-body">
+              <div class="form-group">
+          <label>Name:</label>
+          <input name="name" type="text" class="form-control" >
+        </div>
+        <div class="form-group">
+          <label>Phone Number:</label>
+          <input name="phonenumber" type="text" class="form-control" >
+        </div>
+        <div class="form-group">
+          <label>Vehicle Number:</label>
+          <input name="vehiclenumber" type="text" class="form-control" >
+        </div>
+        <div class="form-group">
+          <label>Email address:</label>
+          <input type="email" class="form-control" name="email">
+        </div>
+        <div class="form-group">
+          <label>Password:</label>
+          <input type="password" class="form-control" name="password">
+        </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" >Sign Up</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+    </form>
+      </div>
+      
+    </div>
+  </div>
+	
+  <nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span> 
+      </button>
+      <a class="navbar-brand" href="/grid/grid">Book My Slot</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="/grid/grid">Home</a></li>
+      
+      <!-- <li><a {%if  st %} onclick="window.location.href='/bookings/bookings'"{%else%} onclick="al()" {%endif%}>My Bookings</a></li> -->
+      {% if stat == 1 %}
+       <li><a onclick="window.location.href='/bookings/bookings'">My Bookings</a></li>
+      <li><a id="qr" href="#">Scan</a></li>
+      {% endif %}
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+    	{% if stat == 1 %} 
+    	<li><a style="pointer-events: none; cursor: default"><span class="glyphicon glyphicon-user"></span> {{name}}</a></li>
+    	<li><a  type="button"  data-toggle="modal" data-target="#logoutModal"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+    	  {% else %}   
+      <li><a type="button"  data-toggle="modal" data-target="#signupModal"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+      <li><a  type="button"  data-toggle="modal" data-target="#loginModal"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+      {% endif %} 
+    </ul>
+	</div>
+
+  </div>
+</nav>
+
+
+<div style="text-align: center;">
+  <div id ="contentblock">
+    <div id = "booking_alert" style="display:none;">
+       <div class="alert alert-info alert-dismissible">
+     <a class = "close" href = "#" onclick="closeAlertBox()">x</a>
+     <div id = "message">
+      </div>
+    </div>  
+    </div>
+    {% block content %}
+    {% endblock %}
+
+  </div>
+ </div> 
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js"></script>
+ <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+ <script src="{% static 'script.js' %}"></script>
+ <script>
+  var scanner = new Instascan.Scanner({ video: document.getElementById('preview')});
+  var camlist = [];
+  var camid = 0;
+ $(document).ready(function(){
+    console.log(scanner)
+    scanner.addListener('scan', function(content){scannerCallback(content)
+    });
+    Instascan.Camera.getCameras().then(function (cameras) {
+        if (cameras.length > 0) {
+          camlist = cameras;
+        }
+        else {
+          $("#scanModal .modal-body .errmsg").html("No cameras found")
+        }
+      }).catch(function (e) {
+        $("#scanModal .modal-body .errmsg").html("Please refresh page and allow camera permission")
+      });
+    $("#qr").click(function(){
+        $("#scanModal .modal-body .errmsg").html("Please refresh page and allow camera permission")
+        if(camlist.length > 0){
+        $("#scanModal .modal-body .errmsg").html("")
+         $("#scanModal").show()
+         scanner.start(camlist[camid]);
+        }
+        else{
+          $("#scanModal").show()
+        }
+    });
+   //  $('#scanModal').on('shown.bs.modal', function (event) {
+   //    // event.preventDefault();
+   //    // console.log("starting scanner")
+   //    //scanner.start(camlist[0]);
+   // })
+    $(".closeQr").click(function(){
+        $("#scanModal").hide();
+        scanner.stop();
+        
+    });
+});
+
+</script>
+</body>
+</html>
