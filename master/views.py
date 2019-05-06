@@ -19,6 +19,8 @@ def master(request):
  result = cursor.fetchall()
  cursor.execute('SELECT width,height FROM area')
  area=cursor.fetchone()
+ db.commit()
+ db.close()
  if request.method == 'POST' and request.FILES['myfile']:
   myfile = request.FILES['myfile']
   fs = FileSystemStorage()
