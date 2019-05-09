@@ -14,28 +14,19 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
-from django.conf.urls import include
-from django.contrib import admin
 
-from django.views.generic.base import TemplateView
+from django.contrib import admin
+from django.contrib import admin
+from django.urls import include, path
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
-    url(r'accounts/', include('accounts.urls')),
-    url(r'accounts/', include('django.contrib.auth.urls')),
-    #url(r'^', include('gridapp.urls')),
-    url(r'grid/', include('gridapp.urls')),
- url(r'getdata/', include('gridapp.urls')),
-   
-    url(r'^admin/', admin.site.urls),
-     url(r'registerform/',  include('registerapp.urls')),
-    url(r'register/',  include('registerapp.urls')),
-    url(r'signup/',  include('registerapp.urls')),
-    url(r'login/',  include('registerapp.urls')),
-    url(r'logout/',  include('registerapp.urls')),
-    url(r'bookings/',  include('registerapp.urls')),
-    
- 
+    path(r'accounts/', include('accounts.urls')),
+    path(r'grid/', include('gridapp.urls')),
+    path(r'admin/', admin.site.urls),
+    path(r'bookings/',  include('bookapp.urls')),
+    path(r'master/', include('master.urls'))
 ]
+urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 
-# hello(repeat=10,repeat_until=None)

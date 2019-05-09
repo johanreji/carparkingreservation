@@ -1,4 +1,5 @@
 {% load static %}
+{% load widget_tweaks %}
 <!doctype html>
 <html>
 <head>
@@ -10,6 +11,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.0/dist/jquery.validate.min.js"></script>
   <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script> -->
   
 
@@ -37,9 +39,24 @@ body{
   background-color: #000000;
 background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='30' viewBox='0 0 1000 120'%3E%3Cg fill='none' stroke='%23222' stroke-width='5.1' %3E%3Cpath d='M-500 75c0 0 125-30 250-30S0 75 0 75s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 45c0 0 125-30 250-30S0 45 0 45s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 105c0 0 125-30 250-30S0 105 0 105s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 15c0 0 125-30 250-30S0 15 0 15s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500-15c0 0 125-30 250-30S0-15 0-15s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 135c0 0 125-30 250-30S0 135 0 135s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3C/g%3E%3C/svg%3E");
 }
+
+svg-container{
+  display:inline-block;
+  position:relative;
+  width:100%;
+  padding-bottom: 100%;
+  vertical-align:middle;
+  overflow:hidden;
+}
+
 .bg{
-background-color: #11aa44;
-background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='275' height='275' viewBox='0 0 200 200'%3E%3Cg fill='none' stroke='%237F3' stroke-width='1.4' stroke-opacity='0.1'%3E%3Crect x='-40' y='40' width='75' height='75'/%3E%3Crect x='-35' y='45' width='65' height='65'/%3E%3Crect x='-30' y='50' width='55' height='55'/%3E%3Crect x='-25' y='55' width='45' height='45'/%3E%3Crect x='-20' y='60' width='35' height='35'/%3E%3Crect x='-15' y='65' width='25' height='25'/%3E%3Crect x='-10' y='70' width='15' height='15'/%3E%3Crect x='-5' y='75' width='5' height='5'/%3E%3Crect width='35' height='35'/%3E%3Crect x='5' y='5' width='25' height='25'/%3E%3Crect x='10' y='10' width='15' height='15'/%3E%3Crect x='15' y='15' width='5' height='5'/%3E%3Crect x='40' width='75' height='75'/%3E%3Crect x='45' y='5' width='65' height='65'/%3E%3Crect x='50' y='10' width='55' height='55'/%3E%3Crect x='55' y='15' width='45' height='45'/%3E%3Crect x='60' y='20' width='35' height='35'/%3E%3Crect x='65' y='25' width='25' height='25'/%3E%3Crect x='70' y='30' width='15' height='15'/%3E%3Crect x='75' y='35' width='5' height='5'/%3E%3Crect x='40' y='80' width='35' height='35'/%3E%3Crect x='45' y='85' width='25' height='25'/%3E%3Crect x='50' y='90' width='15' height='15'/%3E%3Crect x='55' y='95' width='5' height='5'/%3E%3Crect x='120' y='-40' width='75' height='75'/%3E%3Crect x='125' y='-35' width='65' height='65'/%3E%3Crect x='130' y='-30' width='55' height='55'/%3E%3Crect x='135' y='-25' width='45' height='45'/%3E%3Crect x='140' y='-20' width='35' height='35'/%3E%3Crect x='145' y='-15' width='25' height='25'/%3E%3Crect x='150' y='-10' width='15' height='15'/%3E%3Crect x='155' y='-5' width='5' height='5'/%3E%3Crect x='120' y='40' width='35' height='35'/%3E%3Crect x='125' y='45' width='25' height='25'/%3E%3Crect x='130' y='50' width='15' height='15'/%3E%3Crect x='135' y='55' width='5' height='5'/%3E%3Crect y='120' width='75' height='75'/%3E%3Crect x='5' y='125' width='65' height='65'/%3E%3Crect x='10' y='130' width='55' height='55'/%3E%3Crect x='15' y='135' width='45' height='45'/%3E%3Crect x='20' y='140' width='35' height='35'/%3E%3Crect x='25' y='145' width='25' height='25'/%3E%3Crect x='30' y='150' width='15' height='15'/%3E%3Crect x='35' y='155' width='5' height='5'/%3E%3Crect x='200' y='120' width='75' height='75'/%3E%3Crect x='40' y='200' width='75' height='75'/%3E%3Crect x='80' y='80' width='75' height='75'/%3E%3Crect x='85' y='85' width='65' height='65'/%3E%3Crect x='90' y='90' width='55' height='55'/%3E%3Crect x='95' y='95' width='45' height='45'/%3E%3Crect x='100' y='100' width='35' height='35'/%3E%3Crect x='105' y='105' width='25' height='25'/%3E%3Crect x='110' y='110' width='15' height='15'/%3E%3Crect x='115' y='115' width='5' height='5'/%3E%3Crect x='80' y='160' width='35' height='35'/%3E%3Crect x='85' y='165' width='25' height='25'/%3E%3Crect x='90' y='170' width='15' height='15'/%3E%3Crect x='95' y='175' width='5' height='5'/%3E%3Crect x='120' y='160' width='75' height='75'/%3E%3Crect x='125' y='165' width='65' height='65'/%3E%3Crect x='130' y='170' width='55' height='55'/%3E%3Crect x='135' y='175' width='45' height='45'/%3E%3Crect x='140' y='180' width='35' height='35'/%3E%3Crect x='145' y='185' width='25' height='25'/%3E%3Crect x='150' y='190' width='15' height='15'/%3E%3Crect x='155' y='195' width='5' height='5'/%3E%3Crect x='160' y='40' width='75' height='75'/%3E%3Crect x='165' y='45' width='65' height='65'/%3E%3Crect x='170' y='50' width='55' height='55'/%3E%3Crect x='175' y='55' width='45' height='45'/%3E%3Crect x='180' y='60' width='35' height='35'/%3E%3Crect x='185' y='65' width='25' height='25'/%3E%3Crect x='190' y='70' width='15' height='15'/%3E%3Crect x='195' y='75' width='5' height='5'/%3E%3Crect x='160' y='120' width='35' height='35'/%3E%3Crect x='165' y='125' width='25' height='25'/%3E%3Crect x='170' y='130' width='15' height='15'/%3E%3Crect x='175' y='135' width='5' height='5'/%3E%3Crect x='200' y='200' width='35' height='35'/%3E%3Crect x='200' width='35' height='35'/%3E%3Crect y='200' width='35' height='35'/%3E%3C/g%3E%3C/svg%3E");
+  display:inline-block;
+  position:absolute;
+  top:0;
+  left:0;
+
+/*background-color: #11aa44;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='275' height='275' viewBox='0 0 200 200'%3E%3Cg fill='none' stroke='%237F3' stroke-width='1.4' stroke-opacity='0.1'%3E%3Crect x='-40' y='40' width='75' height='75'/%3E%3Crect x='-35' y='45' width='65' height='65'/%3E%3Crect x='-30' y='50' width='55' height='55'/%3E%3Crect x='-25' y='55' width='45' height='45'/%3E%3Crect x='-20' y='60' width='35' height='35'/%3E%3Crect x='-15' y='65' width='25' height='25'/%3E%3Crect x='-10' y='70' width='15' height='15'/%3E%3Crect x='-5' y='75' width='5' height='5'/%3E%3Crect width='35' height='35'/%3E%3Crect x='5' y='5' width='25' height='25'/%3E%3Crect x='10' y='10' width='15' height='15'/%3E%3Crect x='15' y='15' width='5' height='5'/%3E%3Crect x='40' width='75' height='75'/%3E%3Crect x='45' y='5' width='65' height='65'/%3E%3Crect x='50' y='10' width='55' height='55'/%3E%3Crect x='55' y='15' width='45' height='45'/%3E%3Crect x='60' y='20' width='35' height='35'/%3E%3Crect x='65' y='25' width='25' height='25'/%3E%3Crect x='70' y='30' width='15' height='15'/%3E%3Crect x='75' y='35' width='5' height='5'/%3E%3Crect x='40' y='80' width='35' height='35'/%3E%3Crect x='45' y='85' width='25' height='25'/%3E%3Crect x='50' y='90' width='15' height='15'/%3E%3Crect x='55' y='95' width='5' height='5'/%3E%3Crect x='120' y='-40' width='75' height='75'/%3E%3Crect x='125' y='-35' width='65' height='65'/%3E%3Crect x='130' y='-30' width='55' height='55'/%3E%3Crect x='135' y='-25' width='45' height='45'/%3E%3Crect x='140' y='-20' width='35' height='35'/%3E%3Crect x='145' y='-15' width='25' height='25'/%3E%3Crect x='150' y='-10' width='15' height='15'/%3E%3Crect x='155' y='-5' width='5' height='5'/%3E%3Crect x='120' y='40' width='35' height='35'/%3E%3Crect x='125' y='45' width='25' height='25'/%3E%3Crect x='130' y='50' width='15' height='15'/%3E%3Crect x='135' y='55' width='5' height='5'/%3E%3Crect y='120' width='75' height='75'/%3E%3Crect x='5' y='125' width='65' height='65'/%3E%3Crect x='10' y='130' width='55' height='55'/%3E%3Crect x='15' y='135' width='45' height='45'/%3E%3Crect x='20' y='140' width='35' height='35'/%3E%3Crect x='25' y='145' width='25' height='25'/%3E%3Crect x='30' y='150' width='15' height='15'/%3E%3Crect x='35' y='155' width='5' height='5'/%3E%3Crect x='200' y='120' width='75' height='75'/%3E%3Crect x='40' y='200' width='75' height='75'/%3E%3Crect x='80' y='80' width='75' height='75'/%3E%3Crect x='85' y='85' width='65' height='65'/%3E%3Crect x='90' y='90' width='55' height='55'/%3E%3Crect x='95' y='95' width='45' height='45'/%3E%3Crect x='100' y='100' width='35' height='35'/%3E%3Crect x='105' y='105' width='25' height='25'/%3E%3Crect x='110' y='110' width='15' height='15'/%3E%3Crect x='115' y='115' width='5' height='5'/%3E%3Crect x='80' y='160' width='35' height='35'/%3E%3Crect x='85' y='165' width='25' height='25'/%3E%3Crect x='90' y='170' width='15' height='15'/%3E%3Crect x='95' y='175' width='5' height='5'/%3E%3Crect x='120' y='160' width='75' height='75'/%3E%3Crect x='125' y='165' width='65' height='65'/%3E%3Crect x='130' y='170' width='55' height='55'/%3E%3Crect x='135' y='175' width='45' height='45'/%3E%3Crect x='140' y='180' width='35' height='35'/%3E%3Crect x='145' y='185' width='25' height='25'/%3E%3Crect x='150' y='190' width='15' height='15'/%3E%3Crect x='155' y='195' width='5' height='5'/%3E%3Crect x='160' y='40' width='75' height='75'/%3E%3Crect x='165' y='45' width='65' height='65'/%3E%3Crect x='170' y='50' width='55' height='55'/%3E%3Crect x='175' y='55' width='45' height='45'/%3E%3Crect x='180' y='60' width='35' height='35'/%3E%3Crect x='185' y='65' width='25' height='25'/%3E%3Crect x='190' y='70' width='15' height='15'/%3E%3Crect x='195' y='75' width='5' height='5'/%3E%3Crect x='160' y='120' width='35' height='35'/%3E%3Crect x='165' y='125' width='25' height='25'/%3E%3Crect x='170' y='130' width='15' height='15'/%3E%3Crect x='175' y='135' width='5' height='5'/%3E%3Crect x='200' y='200' width='35' height='35'/%3E%3Crect x='200' width='35' height='35'/%3E%3Crect y='200' width='35' height='35'/%3E%3C/g%3E%3C/svg%3E");*/
 }
 
    
@@ -82,10 +99,17 @@ input[type=time] {
 	width: 435px;
 
 }
+th{
+  text-align: center;
+}
 
 ::-webkit-scrollbar {
-width: 0px; /* remove scrollbar space /
-background: transparent; / optional: just make scrollbar invisible /
+width: 0px; 
+background: transparent; 
+}
+@-moz-document url-prefix() {
+    html,body{overflow: hidden !important;}
+    
 }
 
     </style>
@@ -134,7 +158,10 @@ background: transparent; / optional: just make scrollbar invisible /
         
         </div>
         <div class="modal-footer">
-          <button onclick="window.location.href='/logout/logout'" type="submit" class="btn btn-primary" >Yes</button>
+          <form action="{% url 'accounts:logout' %} " method="POST" id="logoutform">
+            {% csrf_token %}
+          </form>  
+          <button type="submit" form = "logoutform" class="btn btn-primary" >Yes</button>
           <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
         </div>
       </div>
@@ -151,7 +178,8 @@ background: transparent; / optional: just make scrollbar invisible /
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Log In</h4>
         </div>
-        <form action="/login/login" method="POST">
+        <form action="{% url 'accounts:login' %}" method="POST">
+          {% csrf_token %}
         <div class="modal-body">
         <div class="form-group">
           <label>Email address:</label>
@@ -181,9 +209,21 @@ background: transparent; / optional: just make scrollbar invisible /
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Sign Up</h4>
         </div>
-        <form action="/signup/signup" method="POST">
+        <form action="{% url 'accounts:signup' %}" method="POST">
+          {% csrf_token %}
         <div class="modal-body">
-              <div class="form-group">
+            {% for field in register_form %}
+              <div class="form group">
+            {{ field.errors }}
+            {{ field.label_tag }} {{ field  | add_class:"form-control" }}
+            {% if field.help_text %}
+            <p class="help">{{ field.help_text|safe }}</p>
+            {% endif %}
+            </div>
+            {% endfor %}         
+            <!--   <div class="foas_tabrm-group">
+          }
+          }
           <label>Name:</label>
           <input name="name" type="text" class="form-control" >
         </div>
@@ -202,11 +242,12 @@ background: transparent; / optional: just make scrollbar invisible /
         <div class="form-group">
           <label>Password:</label>
           <input type="password" class="form-control" name="password">
-        </div>
+        </div> -->
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-primary" >Sign Up</button>
           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+
         </div>
     </form>
       </div>
@@ -222,21 +263,21 @@ background: transparent; / optional: just make scrollbar invisible /
         <span class="icon-bar"></span>
         <span class="icon-bar"></span> 
       </button>
-      <a class="navbar-brand" href="/grid/grid">Book My Slot</a>
+      <a class="navbar-brand" href="/grid/getslots/html/">Book My Slot</a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
     <ul class="nav navbar-nav">
-      <li class="active"><a href="/grid/grid">Home</a></li>
+      <li class="active"><a href="/grid/getslots/html/">Home</a></li>
       
       <!-- <li><a {%if  st %} onclick="window.location.href='/bookings/bookings'"{%else%} onclick="al()" {%endif%}>My Bookings</a></li> -->
-      {% if stat == 1 %}
-       <li><a onclick="window.location.href='/bookings/bookings'">My Bookings</a></li>
+      {% if user.is_authenticated %}
+       <li><a href="{% url 'bookapp:bookedslots' %}">My Bookings</a></li>
       <li><a id="qr" href="#">Scan</a></li>
       {% endif %}
     </ul>
     <ul class="nav navbar-nav navbar-right">
-    	{% if stat == 1 %} 
-    	<li><a style="pointer-events: none; cursor: default"><span class="glyphicon glyphicon-user"></span> {{name}}</a></li>
+    	{% if user.is_authenticated %}
+    	<li><a style="" href="{% url 'accounts:profile' %}"><span class="glyphicon glyphicon-user"></span> {{user.email}}</a></li>
     	<li><a  type="button"  data-toggle="modal" data-target="#logoutModal"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
     	  {% else %}   
       <li><a type="button"  data-toggle="modal" data-target="#signupModal"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
@@ -251,7 +292,7 @@ background: transparent; / optional: just make scrollbar invisible /
 
 <div style="text-align: center;">
   <div id ="contentblock">
-    <div id = "booking_alert" style="display:none;">
+    <div id = "booking_alert" { % if not alert % } style="display:none;" { % else % } style="display:block;" { endif }>
        <div class="alert alert-info alert-dismissible">
      <a class = "close" href = "#" onclick="closeAlertBox()">x</a>
      <div id = "message">
@@ -287,9 +328,9 @@ background: transparent; / optional: just make scrollbar invisible /
     $("#qr").click(function(){
         $("#scanModal .modal-body .errmsg").html("Please refresh page and allow camera permission")
         if(camlist.length > 0){
+            scanner.start(camlist[camid]);
         $("#scanModal .modal-body .errmsg").html("")
          $("#scanModal").show()
-         scanner.start(camlist[camid]);
         }
         else{
           $("#scanModal").show()

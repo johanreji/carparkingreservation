@@ -1,0 +1,38 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+	<div class="container">
+    <div class="table-responsive">          
+        <table class="table">
+          <thead>
+            <tr> 
+              <th colspan=6><center class="text-primary">Profile Details</center></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Email</td>
+              <td>{{user.email}}</td>
+            </tr>
+
+            <tr>
+              <td>Mobile Number</td>
+              <td>{{user.mobile_number}}</td>
+            </tr>
+
+            <tr>
+              <td>Vehicle Number</td>
+              <td>{{user.vehicle_number}}</td>
+            </tr>
+
+          </tbody>
+        </table>
+  </div>
+</div>
+
+
+
+
+{% endblock %}

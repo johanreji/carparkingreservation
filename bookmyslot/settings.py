@@ -37,10 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'background_task',
     'gridapp',
-    'registerapp',
+    'bookapp',
     'accounts',
+    'master',
+    'widget_tweaks',
     #'django_rq',
     #'scheduler',
 ]
@@ -72,6 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'accounts.context_processors.register_form',
 
             ],
         },
@@ -92,6 +94,7 @@ DATABASES = {
     'PORT': '3306',
     'USER': 'django',
     'PASSWORD': 'virurohan',
+    #'ATOMIC_REQUESTS':True,
     }
 }
 
@@ -114,9 +117,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = 'accounts.CustomUser'
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'home'
+AUTH_USER_MODEL = 'accounts.User'
+LOGIN_REDIRECT_URL = 'getslots'
+LOGOUT_REDIRECT_URL = 'getslots'
 
 # RQ_QUEUES = {
 #     'default': {
@@ -155,7 +158,7 @@ LOGOUT_REDIRECT_URL = 'home'
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -172,6 +175,9 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
 	os.path.join(BASE_DIR, 'static'),
 ]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # LOGGING = {
 #     'version': 1,

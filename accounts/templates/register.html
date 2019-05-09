@@ -8,9 +8,13 @@
 
 	<form action="/accounts/register" method = "POST">
 
-		<input type ="text" name="name">
-		<input type ="text" name = "email">
+		<input type ="text" name="username">
+		<input type ="text" name="firstname">
+		<input type ="text" name="lastname">
+		<input type ="email" name = "email">
 		<input type = "text" name = "password">
+		<input type ="text" name = "vehicle_number">
+		<input type = "number" name = "mobile_number">
 		<input type = "submit" value ="Register">
 		{% csrf_token %}
 	</form>

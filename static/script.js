@@ -1,38 +1,91 @@
 
 
-function test(box,x){
-  
- var element;
-   
-  
-  for(var i=0;i<=3;i++){
-
-    element = document.getElementById("r"+i);
-    element.style.fill="";
+class CurrSlot {
+  constructor(slotno) {
+    this.slotno = slotno;
+    this.result_dict=null;
+    this.ajax_toggle=false;
+    this.startdate=null
+    this.starttime=null
+    this.enddate=null
+    this.endtime=null
+    this.poll=null
   }
-   element = document.getElementById("r"+x);
-   if(element.style.fill==="orange"){
-    element.style.fill="";
+  test(x){
+    if(!this.result_dict || !this.ajax_toggle){
+      return;
     }
-    else{
-      element.style.fill="orange";
+    console.log(this.result_dict)
+    if (this.result_dict.hasOwnProperty(x)) {
+    // key exists on the object itself (not only on the prototype)
+        let element;
+        if(this.slotno!=null){
+          element = document.getElementById("r"+this.slotno);
+          element.style.fill="";
+        }  
+        element = document.getElementById("r"+x);
+        element.style.fill="orange";
+        this.slotno = x;
+        document.getElementById("slotselected").value=this.slotno;
+        return;
+     }
+     else{
+      return;
+     }    
+  }
+  setResultdict(result_dict, startdate, enddate, starttime, endtime){
+    console.log("check")
+    if(this.slotno){
+      let element = document.getElementById("r"+this.slotno);
+      element.style.fill="";
+      this.slotno=null;
     }
-  //  document.getElementById("st").value=document.getElementById("stime").value;
-  //  document.getElementById("et").value=document.getElementById("etime").value;
-    document.getElementById("slotselected").value=x;
+    this.starttime=starttime
+    this.endtime=endtime
+    this.startdate=startdate
+    this.enddate=enddate
+    this.ajax_toggle=true;
+    $('#datetimedisplay').html(`Slots Available from ${this.startdate},  ${this.starttime} \
+     to ${this.enddate} , ${this.endtime} select one`);
+    $("#datetimedisplay").show();  
+    this.result_dict=result_dict;
+    console.log(this.result_dict)
+  }
 
+  disableBooking(){
+    this.ajax_toggle=false;
+    if(this.slotno){
+      let element = document.getElementById("r"+this.slotno);
+      element.style.fill="";
+    }
+    $("#datetimedisplay").hide();  
+  }
+  checkBookingStatus(){
+    return this.ajax_toggle;
+  }
+
+  change(callfunc) {
+  if (!this.ajax_toggle) {
+      this.poll = window.setInterval(ajaxSlots, 2000);
+  } 
+  else {
+    window.clearInterval(this.poll);
+    this.poll=null;
+   }
+  } 
 }
+
 function al(){
     alert("Please log in.");
 }
 
- function validate(stat){
+ function validate(loginFlag, bookingFlag){
     if((document.getElementById('st').value=="") || (document.getElementById('et').value=="") ||(document.getElementById("slotselected").value=="") || (document.getElementById('dst').value=="") 
     || (document.getElementById('det').value=="") ){
         alert("Enter Start time and End time");
         return false
     }
-    if(stat){
+    if(loginFlag){
         return true;
     }
     else{

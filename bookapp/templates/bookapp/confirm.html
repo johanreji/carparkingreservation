@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-md-4 col-md-offset-4">
+          <form role="form" action="{% url 'bookapp:confirmslot' %}" method="POST" >
+            {% csrf_token %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        Payment Details
+                    </h3>
+
+                </div>
+                <div class="panel-body">
+                      <div class="form-group">
+                          <label>Booking at Slot {{slotselected}} from {{dst}} to {{det}}</label>
+                              <input class="form-control" type="hidden" name="st" value="{{dst}}">
+                              <input class="form-control" type="hidden" name="et" value="{{det}}">
+                              <input class="form-control" type="hidden" name="rid" value="{{rid}}">
+                              <input class="form-control" type="hidden" name="slot" value="{{slotselected}}">
+                      </div>
+                    <div class="form-group">
+                        <label for="cardNumber">
+                            CARD NUMBER</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="cardNumber" placeholder="Valid Card Number"
+                                required autofocus />
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-7 col-md-7">
+                            <div class="form-group">
+                              <div class="col-xs-12 col-lg-12">
+                                <label for="expityMonth">
+                                    EXPIRY DATE</label>
+                              </div>
+                                <div class="col-xs-6 col-lg-6 pl-ziro">
+                                    <input type="text" class="form-control" id="expityMonth" placeholder="MM" required />
+                                </div>
+                                <div class="col-xs-6 col-lg-6 pl-ziro">
+                                    <input type="text" class="form-control" id="expityYear" placeholder="YY" required /></div>
+                            </div>
+                        </div>
+                        <div class="col-xs-5 col-md-5 pull-right">
+                            <div class="form-group">
+                                <label for="cvCode">
+                                    CV CODE</label>
+                                <input type="hidden" class="form-control" name="amount" value="{{amt}}"/>    
+                                <input type="password" class="form-control" id="cvCode" placeholder="CV" required />
+                            </div>
+                        </div>
+                    </div>
+                    <!-- </form> -->
+                </div>
+            </div>
+            
+           
+            <!-- <a href="http://www.jquery2dotnet.com" class="btn btn-success btn-lg btn-block" role="button">Pay</a> -->
+            <input class="btn btn-success btn-lg btn-block" type="submit" value="Pay Rs.{{amt}}" onsubmit="return validate()" />
+          </form>
+        </div>
+    </div>
+</div>
+
+
+<div style="display: none;" class="loading" id="load">Loading&#8230;</div>
+
+<script type="text/javascript">
+function validate(){
+document.getElementById("load").style.display="block";
+if(violin()){
+  return true;
+}
+}
+function violin(){
+  setTimeout(function() {
+  return true;
+}, 3000);
+}
+</script>
+{% endblock %}

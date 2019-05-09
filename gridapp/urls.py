@@ -3,11 +3,11 @@ from django.contrib import admin
 from django.conf.urls import include
 from gridapp import views
 
-
+app_name="gridapp"
 urlpatterns = [
-      #url(r'^$', views.grid, name="home"),
-      url(r'grid', views.grid, name='grid'),
-      url(r'scan', views.scan, name='scan'),
-      url(r'getdata', views.getdata, name='getdata'),
+      url(r'^getslots/(?P<restype>\w+)/', views.getslots, name='getslots'),
+      url(r'^scan/', views.qrscan, name='qrscan'),
+      url(r'^getdata/', views.getdata, name='getdata'),
+
 ]
 

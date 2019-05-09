@@ -1,0 +1,281 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="container">
+  
+
+    <!-- {% if alert %}
+    <div class="alert alert-info alert-dismissible">
+     <button type="button" class="close" data-dismiss="alert">&times;</button>
+     <strong>Sorry</strong> {{alert}}
+    </div>
+    {% endif %} -->
+  <form id="search" class="form-inline" action="{% url 'bookapp:searchslots' %}" method="POST">
+    <!-- {% csrf_token %} -->
+  	<div class="form-group">
+      <label style=" font-size: 15px; color: white;  margin: 0;">Start Date:</label>
+      <input id="sdate" class="form-control" type="date" name="startdate" required="required" onblur="document.getElementById('dst').value = this.value;" >
+      <input id="stime" class="form-control" type="time" name="starttime" required="required" onblur="document.getElementById('st').value = this.value;" >
+    </div>
+      <div class="form-group">
+      <label style=" font-size: 15px; color: white;  margin: 0;">  End Date:</label>
+      <input id="edate" class="form-control" type="date" name="enddate" required="required" onblur="
+      document.getElementById('det').value = this.value;" >
+      <input id="etime" class="form-control" type="time" name="endtime" required="required"  onblur="document.getElementById('et').value = this.value;" >
+      </div>
+    <input class="btn btn-primary" value="search" type="submit"/>
+  </form>
+
+  <h4 class="font-weight-bold" id ="datetimedisplay" style="color: white;"></h4>
+	<h4 style="color: white;">or</h4>
+  <button class="btn btn-primary" id="check-slots">Check Current Slot availability</button>
+  <div class="row">
+    <div class="col-lg-10 col-sm-12 col-md-12">
+    <div class="svg-container">
+
+    <svg class="bg" width={{area.0}}  height="300px"  style="margin:20px auto; display: flex; overflow:scroll;" >
+        {% for id, obj in result.items %}
+        
+        <g class="slotblock" id="g{{id}}">
+          <rect id="r{{id}}" x="{{obj.1}}" y="{{obj.2}}" width="{{area.2}}" height="{{area.3}}"  class="{%if st %}{% if obj.0 %}  redrect {% else %}  greenrect {% endif %} {%endif%}"  style="stroke-width:3;stroke:rgb(0,0,0);cursor:{% if obj.0 %} not-allowed {% else %} pointer {% endif %} ;"></rect>
+        <text x="{{obj.1|add:centertext.0}}" y="{{obj.2|add:centertext.1}}" font-size="15" fill="black"> {{id}} </text>
+        </g>
+       {% endfor %}
+      </svg>
+
+    </div>
+    </div>
+  </div>
+
+
+    <form id="bookform" action="{% url 'bookapp:bookslot' %}" method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="sdate" id="dst">
+      <input type="hidden"  name="edate" id="det">
+      <input type="hidden" name="stime" id="st">
+      <input type="hidden"  name="etime" id="et">
+      <input id="slotselected" type="hidden" name="slotselected" required="required">
+      <input class="btn btn-primary" type="submit" value="Book selected Slot">
+    </form>
+
+</div>
+
+<!-- </div> -->
+
+<script type="text/javascript">
+  // var d = new Date();
+
+// $(document).ready(function(){
+// setInterval(function() {
+// var d = new Date();
+//   document.getElementById("stime").defaultValue = d.getHours()+":"+d.getMinutes();
+//   document.getElementById('st').value = document.getElementById('stime').value;
+//   document.getElementById('et').value = document.getElementById('etime').value;
+
+// }, 60000);
+
+// {% if not st %}
+//     setInterval(function(){
+//     //var catid;
+//     //catid = $(this).attr("data-catid");
+//     if(!$.active)
+//     $.ajax(
+//     {
+//         type:"GET",
+//         url: "/grid/grid/",
+//         dataType : 'json',
+//           data:{
+//                  status:"true",
+//         }, 
+        
+//         success: function( data ) 
+//         {
+          
+//             for(var i=0;i<=3;i++){
+//               element = document.getElementById("r"+i);
+//                 if (data[i]==1){
+//                   // console.log(data[i]);
+//                   element.classList.add("redrect");
+//                   element.classList.remove("greenrect");
+//                 }
+//                 else{
+//                   // console.log("two");
+//                   element.classList.add("greenrect");
+//                   element.classList.remove("redrect");
+//                 }
+//           }
+//           // console.log(data[0]);
+//           //  console.log(typeof data);
+//           //  console.log(data);
+//         }
+//      })
+// }, 2000);
+// {% endif %}
+// });
+
+function updateSlots(grid_dict){       
+  for(var slot in grid_dict){
+  element = document.getElementById("r"+slot);
+      if(grid_dict[slot]==1){
+        element.classList.add("redrect");
+        element.classList.remove("greenrect");
+        element.style.cursor="not-allowed";
+      }
+      else{
+        element.classList.add("greenrect");
+        element.classList.remove("redrect");
+        element.style.cursor="pointer";
+      }       
+   }
+}
+
+function ajaxSlots(){
+  if(!$.active){
+    $.ajax(
+    {
+        type:"GET",
+        url: "/grid/getslots/json/",
+        dataType : 'json',
+
+        success: function( data ){
+          updateSlots(data);
+        }
+
+    });
+  }       
+}
+
+// function pollSlots(slotobj, interval){
+ 
+      
+//     },interval);
+// }
+
+// function getDateTime(){
+
+//     let startdate = $('#sdate').value
+//     let starttime = $('#stime').value
+//     var enddate = $('#edate').value
+//     var endtime = $('#stime').value
+// }
+
+
+// var  = new Promise(function(resolve, reject) {
+//   setTimeout(function() {
+//     resolve('foo');
+//   }, 300);
+
+function searchSlots(slotobj) {
+  //if(!$.active){
+    let startdate = $('#sdate').val();
+    let starttime = $('#stime').val();
+    let enddate = $('#edate').val();
+    let endtime = $('#etime').val();
+
+    $.ajax({
+        type: 'POST',
+        url: $('#search').attr('action'),
+        data: $('#search').serialize(), 
+        dataType : 'json',
+        success: function(response) { 
+         slotobj.setResultdict(response["avaliable"], startdate, enddate, starttime, endtime);
+         slotobj.change();
+         console.log(startdate + ' hehe ')
+         updateSlots(response["booked"]); 
+         updateSlots(response["avaliable"]); 
+       },
+    });
+   //} 
+}
+
+
+$( document ).ready(function() {
+    var slotobj = new CurrSlot(null);
+    // setInterval(function(){
+    //   console.log("check")
+    //   if(!slotobj.checkBookingStatus()){
+    //     ajaxSlots()
+    //   }}, 2000);
+
+    $('#search').on('submit', function(event){
+        event.preventDefault();
+        searchSlots(slotobj);
+    });
+
+    $(".slotblock").click(function(event) {
+        let blockId = event.target.id;
+        blockId = blockId.substring(1,);
+        console.log(blockId);
+        slotobj.test(blockId);
+    });
+
+    $("#check-slots").click(function(event) {
+        slotobj.disableBooking();
+        slotobj.change();
+        ajaxSlots();
+    });
+    $("#bookform").submit(function(event){
+      let loginStatus=false;
+      {% if user.is_authenticated %} loginStatus=true {% endif %}
+      let bookingStatus = slotobj.checkBookingStatus();
+      if(loginStatus && bookingStatus){
+        return true;
+      }
+      else{
+        event.preventDefault();
+        if(!loginStatus){
+          alert("Please Login");
+        }
+        else{
+          alert("Please search and select a slot to book")
+        }
+      } 
+    });
+
+    // jQuery.validator.addMethod("checkbookingstatus", function(value, element) {
+    //    return slotobj.checkBookingStatus();
+    // }, "Please search and select a slot");
+
+    //  jQuery.validator.addMethod("checklogin", function(value, element) {
+    //    let loginStatus=false;
+    //    {% if user.is_authenticated %} loginStatus="true" {% endif %}
+    //    return loginStatus;
+    // }, "Please search and select a slot");
+
+
+    // $('#bookform').validate({ // initialize the plugin
+    //     rules: {
+    //         sdate: {
+    //             required: true,
+    //         },
+    //         edate: {
+    //             required: true,
+    //         },
+    //         stime: {
+    //             required: true,
+    //         },
+    //         etime: {
+    //             required: true,
+    //         },
+    //         slotselected: {
+    //             required: true,
+    //             checkbookingstatus:true,
+    //             checklogin:true,
+    //         },
+    //     }
+    // });
+
+
+});    
+
+
+
+</script>
+
+
+
+{% endblock %}
+

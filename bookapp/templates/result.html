@@ -1,0 +1,457 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<style type="text/css">
+
+	 body{
+  background-color: #000000;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='30' viewBox='0 0 1000 120'%3E%3Cg fill='none' stroke='%23222' stroke-width='5.1' %3E%3Cpath d='M-500 75c0 0 125-30 250-30S0 75 0 75s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 45c0 0 125-30 250-30S0 45 0 45s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 105c0 0 125-30 250-30S0 105 0 105s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 15c0 0 125-30 250-30S0 15 0 15s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500-15c0 0 125-30 250-30S0-15 0-15s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 135c0 0 125-30 250-30S0 135 0 135s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3C/g%3E%3C/svg%3E");
+}
+	.cardWrap {
+  width: 32em;
+  margin: 3em auto;
+  color: #fff;
+  font-family: sans-serif;
+}
+
+.card {
+  background: linear-gradient(to bottom, #e84c3d 0%, #e84c3d 26%, #ecedef 26%, #ecedef 100%);
+  height: 16em;
+  float: left;
+  position: relative;
+  padding: 1em;
+  margin-top: 100px;
+
+}
+
+.cardLeft {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  width: 22em;
+}
+
+.cardRight {
+  width: 10em;
+  border-left: .18em dashed black;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+
+}
+.cardRight:before, .cardRight:after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: .9em;
+  height: .9em;
+  background: #fff;
+  border-radius: 50%;
+  left: -.5em;
+}
+.cardRight:before {
+  top: -.4em;
+  background-color: black;
+}
+.cardRight:after {
+  bottom: -.4em;
+  background-color: black;
+}
+
+h1 {
+  font-size: 2em;
+  margin: 0;
+}
+h1 span {
+  font-weight: normal;
+}
+
+.title, .name, .seat, .time,.note {
+  text-transform: uppercase;
+  font-weight: normal;
+}
+.title h2, .name h2, .seat h2, .time h2 {
+  font-size: 1.1em;
+  color: #525252;
+  margin: 0;
+}
+.title span, .name span, .seat span, .time span {
+  font-size: 0.9em;
+  color: #a2aeae;
+}
+.note span{
+font-size: 0.9em;
+color: #525252;
+  margin: 0;	
+}
+.title {
+  margin: 1.5em 0 0 0;
+}
+
+.name, .seat, .note {
+  margin: .7em 0 0 0;
+}
+
+.time {
+  margin: .7em 0 0 1em;
+}
+
+.seat, .time , .note{
+  float: left;
+}
+
+
+.cancel{
+	 /*margin: 0 auto;*/
+	 display: block;
+	 background: none;
+	 outline: none;
+	 cursor: pointer;
+	 border: none;
+}
+
+.number {
+  text-align: center;
+  text-transform: uppercase;
+}
+.number h3 {
+  color: #e84c3d;
+  margin: .9em 0 0 0;
+  font-size: 2.5em;
+}
+.number span {
+  display: block;
+  color: #a2aeae;
+}
+
+.barcode {
+  height: 2em;
+  width: 0;
+  margin: 1.2em 0 0 .8em;
+  box-shadow: 1px 0 0 1px #343434, 5px 0 0 1px #343434, 10px 0 0 1px #343434, 11px 0 0 1px #343434, 15px 0 0 1px #343434, 18px 0 0 1px #343434, 22px 0 0 1px #343434, 23px 0 0 1px #343434, 26px 0 0 1px #343434, 30px 0 0 1px #343434, 35px 0 0 1px #343434, 37px 0 0 1px #343434, 41px 0 0 1px #343434, 44px 0 0 1px #343434, 47px 0 0 1px #343434, 51px 0 0 1px #343434, 56px 0 0 1px #343434, 59px 0 0 1px #343434, 64px 0 0 1px #343434, 68px 0 0 1px #343434, 72px 0 0 1px #343434, 74px 0 0 1px #343434, 77px 0 0 1px #343434, 81px 0 0 1px #343434;
+}
+
+
+
+/* Absolute Center Spinner */
+.loading {
+  position: fixed;
+  z-index: 999;
+  height: 2em;
+  width: 2em;
+  overflow: show;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+/* Transparent Overlay */
+.loading:before {
+  content: '';
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+    background: radial-gradient(rgba(20, 20, 20,1), rgba(0, 0, 0, 1));
+
+  background: -webkit-radial-gradient(rgba(20, 20, 20,1), rgba(0, 0, 0,1));
+}
+
+/* :not(:required) hides these rules from IE9 and below */
+.loading:not(:required) {
+  /* hide "loading..." text */
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+
+.loading:not(:required):after {
+  content: '';
+  display: block;
+  font-size: 10px;
+  width: 1em;
+  height: 1em;
+  margin-top: -0.5em;
+  -webkit-animation: spinner 1500ms infinite linear;
+  -moz-animation: spinner 1500ms infinite linear;
+  -ms-animation: spinner 1500ms infinite linear;
+  -o-animation: spinner 1500ms infinite linear;
+  animation: spinner 1500ms infinite linear;
+  border-radius: 0.5em;
+  -webkit-box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1.1em 0 0, rgba(255,255,255, 0.75) 0 1.5em 0 0, rgba(255,255,255, 0.75) -1.1em 1.1em 0 0, rgba(255,255,255, 0.75) -1.5em 0 0 0, rgba(255,255,255, 0.75) -1.1em -1.1em 0 0, rgba(255,255,255, 0.75) 0 -1.5em 0 0, rgba(255,255,255, 0.75) 1.1em -1.1em 0 0;
+box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1.1em 0 0, rgba(255,255,255, 0.75) 0 1.5em 0 0, rgba(255,255,255, 0.75) -1.1em 1.1em 0 0, rgba(255,255,255, 0.75) -1.5em 0 0 0, rgba(255,255,255, 0.75) -1.1em -1.1em 0 0, rgba(255,255,255, 0.75) 0 -1.5em 0 0, rgba(255,255,255, 0.75) 1.1em -1.1em 0 0;
+}
+
+/* Animation */
+
+@-webkit-keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-moz-keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-o-keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+
+@media only screen and (max-width: 560px) {
+ 
+  .cardWrap {
+  width: 25em;
+  margin: 3em auto;
+  color: #fff;
+  font-family: sans-serif;
+}
+
+.card {
+  background: linear-gradient(to bottom, #e84c3d 0%, #e84c3d 26%, #ecedef 26%, #ecedef 100%);
+  height: 12em;
+  float: left;
+  position: relative;
+  padding: 1em;
+  margin-top: 100px;
+
+}
+
+.cardLeft {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  width: 18em;
+}
+
+.cardRight {
+  width: 7em;
+  border-left: .18em dashed black;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+
+}
+.cardRight:before, .cardRight:after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: .9em;
+  height: .9em;
+  background: #fff;
+  border-radius: 50%;
+  left: -.5em;
+}
+.cardRight:before {
+  top: -.4em;
+  background-color: black;
+}
+.cardRight:after {
+  bottom: -.4em;
+  background-color: black;
+}
+
+h1 {
+  font-size: 1.25em;
+  margin: 0;
+}
+h1 span {
+  font-weight: normal;
+}
+
+.title, .name, .seat, .time,.note {
+  text-transform: uppercase;
+  font-weight: normal;
+}
+.title h2, .name h2, .seat h2, .time h2 {
+  font-size: 1em;
+  color: #525252;
+  margin: 0;
+}
+.title span, .name span, .seat span, .time span {
+  font-size: 0.9em;
+  color: #a2aeae;
+}
+.note span{
+font-size: 0.9em;
+color: #525252;
+  margin: 0;  
+}
+.title {
+  margin: 1.1em 0 0 0;
+}
+
+.name, .seat, .note {
+  margin: .5em 0 0 0;
+}
+
+.time {
+  margin: .5em 0 0 1em;
+}
+
+.seat, .time , .note{
+  float: left;
+}
+
+
+.cancel{
+   margin: 0 auto;
+   display: block;
+   background: none;
+   outline: none;
+   cursor: pointer;
+   border: none;
+}
+
+.number {
+  text-align: center;
+  text-transform: uppercase;
+}
+.number h3 {
+  color: #e84c3d;
+  margin: .5em 0 0 0;
+  font-size: 2em;
+}
+.number span {
+  display: block;
+  color: #a2aeae;
+}
+
+.barcode {
+  height: 2em;
+  width: 0;
+  margin: 1em 0 0 .1em;
+  box-shadow: 1px 0 0 1px #343434, 5px 0 0 1px #343434, 10px 0 0 1px #343434, 11px 0 0 1px #343434, 15px 0 0 1px #343434, 18px 0 0 1px #343434, 22px 0 0 1px #343434, 23px 0 0 1px #343434, 26px 0 0 1px #343434, 30px 0 0 1px #343434, 35px 0 0 1px #343434, 37px 0 0 1px #343434, 41px 0 0 1px #343434, 44px 0 0 1px #343434, 47px 0 0 1px #343434, 51px 0 0 1px #343434, 56px 0 0 1px #343434, 59px 0 0 1px #343434, 64px 0 0 1px #343434, 68px 0 0 1px #343434, 72px 0 0 1px #343434, 74px 0 0 1px #343434, 77px 0 0 1px #343434, 81px 0 0 1px #343434;
+}
+
+
+}
+</style>
+<body>
+<!-- <div class="fakeLoader"></div> -->
+<div class="container">
+  <div class="table-responsive" style="border: none;">          
+  <table class="table" id="mytab1" style="color: white;">
+    <thead>
+      <tr>
+        <th>ID</th>
+        
+        <th>Slot</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th style="padding-left: 20px;">Cancel</th>
+        
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in result %}
+      <tr>
+        <td>{{item.reservation_id}}</td>
+       
+        <td>{{item.slot_id}}</td>
+        <td>{{item.start_time}}</td>
+        <td>{{item.end_time}}</td>
+        <td><button class="cancel btn btn-danger">    Cancel </button>
+        </td>
+        
+      </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+setInterval(function() {
+for (var i = 1, row; row = table.rows[i]; i++) {
+   var d = new Date();
+    var t=document.getElementsByClassName("table")[0].rows[i].cells[2];
+    var ct=d.getHours()+":"+d.getMinutes();
+    if(t >= ct ){
+    document.getElementsByClassName("table")[0].rows[i].cells[4].style.backgroundColor="green";
+  } 
+}
+ 
+}, 60000);
+
+setTimeout(function(){ 
+  document.getElementsByClassName("loading")[0].style.display="none";
+
+ }, 3000);
+
+(function(window, location) {
+history.replaceState(null, document.title, location.pathname+"#!/history");
+history.pushState(null, document.title, location.pathname);
+
+window.addEventListener("popstate", function() {
+  if(location.hash === "#!/history") {
+    history.replaceState(null, document.title, location.pathname);
+    setTimeout(function(){
+      location.replace("/grid/grid");
+    },0);
+  }
+}, false);
+}(window, location));
+});
+</script>
+
+{% endblock %}
+
