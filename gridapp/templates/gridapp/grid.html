@@ -4,7 +4,7 @@
 {% block content %}
 
 
-<div class="container">
+<!-- <div class="container" height="100%"> -->
   
 
     <!-- {% if alert %}
@@ -13,6 +13,11 @@
      <strong>Sorry</strong> {{alert}}
     </div>
     {% endif %} -->
+  <div class="row">
+    {% if noarea %}
+    <h4 style="color:#ffffff">Please add an Area</h4>
+    {% endif %}
+  <div class="row">
   <form id="search" class="form-inline" action="{% url 'bookapp:searchslots' %}" method="POST">
     <!-- {% csrf_token %} -->
   	<div class="form-group">
@@ -28,28 +33,8 @@
       </div>
     <input class="btn btn-primary" value="search" type="submit"/>
   </form>
-
-  <h4 class="font-weight-bold" id ="datetimedisplay" style="color: white;"></h4>
-	<h4 style="color: white;">or</h4>
-  <button class="btn btn-primary" id="check-slots">Check Current Slot availability</button>
-  <div class="row">
-    <div class="col-lg-10 col-sm-12 col-md-12">
-    <div class="svg-container">
-
-    <svg class="bg" width={{area.0}}  height="300px"  style="margin:20px auto; display: flex; overflow:scroll;" >
-        {% for id, obj in result.items %}
-        
-        <g class="slotblock" id="g{{id}}">
-          <rect id="r{{id}}" x="{{obj.1}}" y="{{obj.2}}" width="{{area.2}}" height="{{area.3}}"  class="{%if st %}{% if obj.0 %}  redrect {% else %}  greenrect {% endif %} {%endif%}"  style="stroke-width:3;stroke:rgb(0,0,0);cursor:{% if obj.0 %} not-allowed {% else %} pointer {% endif %} ;"></rect>
-        <text x="{{obj.1|add:centertext.0}}" y="{{obj.2|add:centertext.1}}" font-size="15" fill="black"> {{id}} </text>
-        </g>
-       {% endfor %}
-      </svg>
-
-    </div>
-    </div>
   </div>
-
+  <div class="row top-buffer">
 
     <form id="bookform" action="{% url 'bookapp:bookslot' %}" method="POST">
       {% csrf_token %}
@@ -58,63 +43,53 @@
       <input type="hidden" name="stime" id="st">
       <input type="hidden"  name="etime" id="et">
       <input id="slotselected" type="hidden" name="slotselected" required="required">
-      <input class="btn btn-primary" type="submit" value="Book selected Slot">
+      <!-- <input class="btn btn-primary" id="book-button" type="submit" value="Book selected Slot"> -->
     </form>
 
+    <div class="btn-group blocks">
+      <button type="button" class="btn btn-primary" id="check-slots">Check Current Slot avaliability</button>
+    </div>
+    <div class="btn-group blocks">
+      <button type="submit" form="bookform" class="btn btn-primary disabled" id="book-button">Book Selected Slot</button>
+  </div>
+  </div>
+
+  <div class="row top-buffer">
+    <div class="col" align="center">
+  <h4 class="font-weight-bold" id ="datetimedisplay" style="color: white;">"Here is the live parking lot status. Red is occupied, green is free. Specify date and search to find an open slot and book it"</h4>
+  </div>
 </div>
+</div>
+<!--   <button class="btn btn-primary" id="check-slots">Check Current Slot availability</button>
+</div> -->
+
+  <div class="row flex-grow-1">
+  
+    <div class="col-lg-10 col-sm-12 col-md-12" id="gridwrap" style="text-align: center; overflow-y:auto;height:300px;overflow-x: auto">
+  
+   
+    <svg class="bg" style="margin:20px auto; display: block; overflow:visible;">
+        {% for id, obj in result.items %}
+        
+        <g class="slotblock" id="g{{id}}">
+          <rect id="r{{id}}" x="{{obj.1}}" y="{{obj.2}}" width="{{area.2}}" height="{{area.3}}"  class="{%if st %}{% if obj.0 %}  redrect {% else %}  greenrect {% endif %} {%endif%}"  style="stroke-width:3;stroke:rgb(0,0,0);cursor:{% if obj.0 %} not-allowed {% else %} pointer {% endif %} ;"></rect>
+        <text x="{{obj.1|add:centertext.0}}" y="{{obj.2|add:centertext.1}}" font-size="15" fill="black"> {{id}} </text>
+        </g>
+       {% endfor %}
+      </svg>
+  
+
+    </div>
+  </div>
+
+
+   <div class="row">
+  </div>
+
 
 <!-- </div> -->
 
 <script type="text/javascript">
-  // var d = new Date();
-
-// $(document).ready(function(){
-// setInterval(function() {
-// var d = new Date();
-//   document.getElementById("stime").defaultValue = d.getHours()+":"+d.getMinutes();
-//   document.getElementById('st').value = document.getElementById('stime').value;
-//   document.getElementById('et').value = document.getElementById('etime').value;
-
-// }, 60000);
-
-// {% if not st %}
-//     setInterval(function(){
-//     //var catid;
-//     //catid = $(this).attr("data-catid");
-//     if(!$.active)
-//     $.ajax(
-//     {
-//         type:"GET",
-//         url: "/grid/grid/",
-//         dataType : 'json',
-//           data:{
-//                  status:"true",
-//         }, 
-        
-//         success: function( data ) 
-//         {
-          
-//             for(var i=0;i<=3;i++){
-//               element = document.getElementById("r"+i);
-//                 if (data[i]==1){
-//                   // console.log(data[i]);
-//                   element.classList.add("redrect");
-//                   element.classList.remove("greenrect");
-//                 }
-//                 else{
-//                   // console.log("two");
-//                   element.classList.add("greenrect");
-//                   element.classList.remove("redrect");
-//                 }
-//           }
-//           // console.log(data[0]);
-//           //  console.log(typeof data);
-//           //  console.log(data);
-//         }
-//      })
-// }, 2000);
-// {% endif %}
-// });
 
 function updateSlots(grid_dict){       
   for(var slot in grid_dict){
@@ -137,10 +112,11 @@ function ajaxSlots(){
     $.ajax(
     {
         type:"GET",
-        url: "/grid/getslots/json/",
+        url: "/getslots/json/",
         dataType : 'json',
 
         success: function( data ){
+          console.log("ajax slots")
           updateSlots(data);
         }
 
@@ -194,6 +170,7 @@ function searchSlots(slotobj) {
 
 $( document ).ready(function() {
     var slotobj = new CurrSlot(null);
+    slotobj.change()
     // setInterval(function(){
     //   console.log("check")
     //   if(!slotobj.checkBookingStatus()){
@@ -202,6 +179,9 @@ $( document ).ready(function() {
 
     $('#search').on('submit', function(event){
         event.preventDefault();
+        $('#book-button').removeClass('btn-danger')
+        //$('#book-button').addClass('btn-primary')
+        $('#book-button').addClass('disabled')
         searchSlots(slotobj);
     });
 

@@ -141,7 +141,7 @@ def detect_unauthorized_parkings():
   current_datetime=datetime.now()
   current_datetime=current_datetime.astimezone(pytz.utc)
   query = SlotsCache.objects.filter(reservation_id__isnull=True, slot_id__occupied=True, 
-    slot_id__confidence__gte=(CONFIDENCE)).values(
+    slot_id__confidence__gte=(CONFIDENCE), slot_id__cnn_timestamp__isnull=False).values(
     'slot_id', 'slot_id__cnn_timestamp')
   creation_list=[]
   for i in query:

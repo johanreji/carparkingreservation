@@ -24,13 +24,14 @@ def master(request):
     area_id=query2.area_id
     query=SlotDims.objects.filter(area_id=area_id)
     slotimg = query2.area_image
+    print(slotimg.url)
     area=(query2.width, query2.height)
     print(result)
     print("area", area)
     print("url, ", slotimg.url)
     return render(request, "master/master.html", {"result" : query ,"area":area, "slotimg":slotimg, "area_id":area_id})
   else:
-    return render(request, "master/master.html", {"result" : query ,"area":None,})
+    return render(request, "master/master.html", {"result" : None ,"area":None,})
 
     
   #if request.method == 'POST' and request.FILES['myfile']:

@@ -2,9 +2,18 @@
 from __future__ import unicode_literals
 from django.conf import settings
 from django.db import models
-from gridapp.models import Slots
-
+from gridapp.models import SlotsCache, Slots
+from django.db.models import Exists, OuterRef
+from django.db.models import F
 # Create your models here.
+
+
+class ReservationsSet(models.QuerySet):
+    def add_engaged(self):
+        return self.annotate(
+            engaged=Exists(SlotsCache.objects.filter(reservation_id=OuterRef('reservation_id'))
+                ))
+            
 
 class Reservations(models.Model):
     reservation_id = models.AutoField(primary_key=True)
@@ -22,6 +31,9 @@ class Reservations(models.Model):
     end_time = models.DateTimeField()
     confirmation = models.BooleanField(default=False)
     payment = models.IntegerField(primary_key=False, default=0)
+
+    objects = ReservationsSet.as_manager()
+    
 
 class PenaltyReservations(models.Model):
     reservation_id = models.IntegerField(primary_key=True)

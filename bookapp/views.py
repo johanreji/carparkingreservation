@@ -9,16 +9,17 @@ from datetime import datetime, timedelta
 from django.db import transaction
 from django.contrib.auth.decorators import login_required
 from .models import Reservations
-from gridapp.models import Slots
+from gridapp.models import Slots, SlotsCache
 from accounts.models import User
 from django.db.models import Q
 import json
 import pytz
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+
 # Create your views here.
 
-@csrf_exempt
+
 def searchslots(request):
     if(request.method=="POST"):
         print("request post data")
@@ -134,12 +135,46 @@ def confirmslot(request):
 @login_required
 def bookedslots(request):
   if(request.method=="GET"):
+    current_time=datetime.now()
+    current_time=current_time.astimezone(pytz.utc)
+    print("current time",current_time)
     current_user=request.user
     user_reservations=Reservations.objects.filter(user_id=current_user.id)
+    ongoing_reservations=user_reservations.add_engaged().filter(start_time__lt=current_time,end_time__gt=current_time).values(
+        'reservation_id','slot_id','start_time','end_time','booking_time','engaged')
+    past_reservations=user_reservations.filter(end_time__lt=current_time)
+    future_reservations=user_reservations.filter(start_time__gt=current_time)
     print(user_reservations)
-    return render(request, "bookapp/userbookings.html",{"result":user_reservations})
+    return render(request, "bookapp/userbookings.html",{"past":past_reservations,
+        "future":future_reservations,"current":ongoing_reservations})
   else:
     return JsonResponse({"status":1})
+
+@login_required
+def cancelslot(request):
+  if(request.method=="POST"):
+    current_time=datetime.now()
+    current_time=current_time.astimezone(pytz.utc)
+    current_user=request.user;
+    reservation_id=int(request.POST["reservation_id"]);
+    print("reservation_id", reservation_id);
+    res_obj = Reservations.objects.get(reservation_id=reservation_id)
+    if res_obj.end_time < current_time:
+        return JsonResponse({"status":5})  
+    slot_query=SlotsCache.objects.filter(reservation_id=reservation_id, slot_id__occupied=True)
+    if not slot_query:
+      try:
+        with transaction.atomic():
+          res_obj.delete()
+          current_reservation_cache=SlotsCache.objects.filter(reservation_id=reservation_id).update()
+        return JsonResponse({"status":1,})
+      except Exception as e:
+        print(str(e))
+      return JsonResponse({"status":2})   
+    else:
+      return JsonResponse({"status":3})  
+  else:
+    return JsonResponse({"status":4})               
 
 
 

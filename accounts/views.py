@@ -23,7 +23,7 @@ def signup(request):
    if user is not None:
    	print("user model: "+ str(user))
    	login(request, user)
-   	return redirect("/grid/getslots/html/")
+   	return redirect(reverse('index'))
    else:	
     return redirect("/grid/getslots/html/")
   else:

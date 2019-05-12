@@ -21,12 +21,18 @@ from django.urls import include, path
 from django.conf.urls.static import static
 from django.conf import settings
 
-urlpatterns = [
+
+urlpatterns = []
+urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+
+urlpatterns +=[
     path(r'accounts/', include('accounts.urls')),
-    path(r'grid/', include('gridapp.urls')),
     path(r'admin/', admin.site.urls),
     path(r'bookings/',  include('bookapp.urls')),
-    path(r'master/', include('master.urls'))
+    path(r'master/', include('master.urls')),
+    path(r'', include('gridapp.urls')),
 ]
-urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+
+
+
 

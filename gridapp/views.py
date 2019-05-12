@@ -75,16 +75,18 @@ def getslots(request, restype):
         slot_list = Slots.objects.order_by('slot_id')
         query2 = ParkingAreas.objects.order_by('-area_id')
         if not query2:
-          return JsonResponse({"message":"No area found"})
+          return render(request, "gridapp/grid.html", {"result":None, "st":timezone.now(), "area":None, "centertext":None,"noarea":"Please add an area"})
         maxrow=SlotDims.objects.all().aggregate(Max('row'))['row__max']  
         print("max row")
         count=Slots.objects.count()
+        if count <1:
+          return render(request, "gridapp/grid.html", {"result":None, "st":timezone.now(), "area":None, "centertext":None,"noarea":"Please generate slots from admin page"})
         query2=query2[0]
         area=(query2.width, query2.height)
         area_id=query2.area_id
-        height = min(area[1]/maxrow - 10*maxrow,150)
+        height = min(area[1]/maxrow - 10*maxrow,75)
         maxcolumn=count/maxrow
-        width=min(area[0]/maxrow - 10*maxcolumn, 150)
+        width=min(area[0]/maxrow - 10*maxcolumn, 50)
         halfheight=int(height/2)
         halfwidth=int(width/2)
         centertext=(halfwidth-10, halfheight-halfheight/(2*maxrow))
@@ -209,6 +211,9 @@ def qrscan(request):
   else:
     resdict["status"]=0
     return JsonResponse(resdict)     
+
+
+
 
 
 
