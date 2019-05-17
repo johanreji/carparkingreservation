@@ -1,0 +1,7 @@
+1.
+python manage.py runserver 0.0.0.0:8000
+
+2. 
+celery -A bookmyslot worker -l info -B
+
+
