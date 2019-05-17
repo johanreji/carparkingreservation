@@ -23,14 +23,13 @@ def signup(request):
    if user is not None:
    	print("user model: "+ str(user))
    	login(request, user)
-   	return redirect(reverse('index'))
+   	return redirect(reverse('gridapp:index'))
    else:	
-    return redirect("/grid/getslots/html/")
+    return redirect(reverse('gridapp:index'))
   else:
-   return redirect("/grid/getslots/html/")
+   return redirect(reverse('gridapp:index'))
  elif request.method == "GET":
-  return redirect("/grid/getslots/html/")
-
+  return redirect(reverse('gridapp:index'))
 @csrf_exempt
 def loginuser(request):
  if request.method == "POST":
@@ -41,18 +40,18 @@ def loginuser(request):
   if user is not None:
    print("user model: "+ str(user))
    login(request, user)
-   return redirect("/grid/getslots/html/")
+   return redirect(reverse('gridapp:index'))
   else:	
-   return redirect("/grid/getslots/html/")
+   return redirect(reverse('gridapp:index'))
  elif request.method == "GET":
-  return redirect('/grid/getslots/html/')
+  return redirect(reverse('gridapp:index'))
 
 
 def logoutuser(request):
  logout(request)
- return redirect("/grid/getslots/html/")
+ return redirect(reverse('gridapp:index'))
  
-@login_required(login_url="/grid/getslots/html/")
+@login_required(login_url='gridapp:index')
 def profile(request):
 	return render(request, "accounts/profile.html/")
 

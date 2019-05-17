@@ -26,10 +26,9 @@ CNNDELAY = 2
 def getdata(request):
  if(request.method=="POST"):
   data=request.POST["val"]
-  ts=request.POST["ts"]
-  #ts=ts.encode('ascii')
-  ts=float(ts)
-  cnnts=datetime.fromtimestamp(ts / 1e3)
+  cnnts=request.POST["ts"][:19]
+  cnnts=datetime.strptime(cnnts,"%Y-%m-%d %H:%M:%S")
+  #cnnts=cnnts.astimezone(pytz.utc)
   print(cnnts)
   details=json.loads(data)
   detailsplain={}

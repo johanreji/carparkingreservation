@@ -19,7 +19,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 
-
+@csrf_exempt
 def searchslots(request):
     if(request.method=="POST"):
         print("request post data")

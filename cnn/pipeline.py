@@ -4,6 +4,8 @@ import logging
 import random
 import queue
 import cv2
+import pytz
+from datetime import datetime
 
 import numpy as np
 import tensorflow as tf
@@ -19,7 +21,7 @@ keras.backend.clear_session()
 import mysql.connector
 
 CAMID = 1
-url="http://127.0.0.1:8000/grid/getdata/"
+url="http://127.0.0.1:8000/getdata/"
 MODEL_NAME ='newmaycnn'
 WEIGHTS = 'newmaycnn_checkpoint.h5'
 DIMS = (1,64,64,3)
@@ -114,7 +116,7 @@ def getImage():
 			t = time.strftime("%Y-%m-%d-%H-%M-%S")
 			#cv2.imwrite("frames/frame%d.jpg" % now, image)
 			#next = time.time() + steps
-			return image, time.time()
+			return image, datetime.utcnow()
 
 def createTestMatrix(imglist):
     n=len(imglist)
@@ -187,7 +189,7 @@ def cropSlices(img, seglist):
             # rotated_roi=cv2.warpAffine(roi, M, (roi.shape[0], roi.shape[1]))
         imglist.append(roi)
         timeval=str(time.time())
-        cv2.imwrite("segments/" + str(piccount) + timeval + "." + str(count) + ".jpeg", roi) 
+        cv2.imwrite("segments/" + str(piccount) + str(count) + ".jpeg", roi) 
         #y1_prev=y1
     return imglist, count   
 

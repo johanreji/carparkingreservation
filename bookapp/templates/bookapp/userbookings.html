@@ -40,7 +40,7 @@
           {% for item in current %}
           <tr id="r{{item.reservation_id}}">
             <td>{{item.reservation_id}}</td>
-            <td >{{item.slot_id_id}}</td>
+            <td >{{item.slot_id}}</td>
             <td>{{item.start_time}}</td>
             <td>{{item.end_time}}</td>
             <td>{% if item.engaged %}Parked {% else %}Not Parked{% endif %}</td>
