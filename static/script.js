@@ -27,6 +27,8 @@ class CurrSlot {
         element.style.fill="orange";
         this.slotno = x;
         document.getElementById("slotselected").value=this.slotno;
+        $('#book-button').addClass('btn-danger')
+        $('#book-button').removeClass('disabled')
         return;
      }
      else{
@@ -45,9 +47,9 @@ class CurrSlot {
     this.startdate=startdate
     this.enddate=enddate
     this.ajax_toggle=true;
-    $('#datetimedisplay').html(`Slots Available from ${this.startdate},  ${this.starttime} \
-     to ${this.enddate} , ${this.endtime} select one`);
-    $("#datetimedisplay").show();  
+    $('#datetimedisplay').html(`Here are slots available from ${this.startdate} ${this.starttime} \
+     to ${this.enddate} ${this.endtime} click on a green one and press book button to book`);
+    //$("#datetimedisplay").show();  
     this.result_dict=result_dict;
     console.log(this.result_dict)
   }
@@ -58,19 +60,22 @@ class CurrSlot {
       let element = document.getElementById("r"+this.slotno);
       element.style.fill="";
     }
-    $("#datetimedisplay").hide();  
+    $("#datetimedisplay").html("Here is the live slot status. Red is occupied, green is free. Specify date and search to find an open slot and book it"); 
   }
   checkBookingStatus(){
     return this.ajax_toggle;
   }
 
-  change(callfunc) {
+  change() {
   if (!this.ajax_toggle) {
       this.poll = window.setInterval(ajaxSlots, 2000);
+      $('#check-slots').addClass('active')
+      $('#book-button').addClass('disabled')
   } 
   else {
     window.clearInterval(this.poll);
     this.poll=null;
+    $('#checkslots').removeClass('active')
    }
   } 
 }
@@ -174,7 +179,7 @@ function scannerCallback(content){
           closeScanner(scanner);
         }
       var data=JSON.stringify({"slot_id":content});
-      qrReq.open("post", "/grid/scan/", true);
+      qrReq.open("post", "/scan/", true);
       qrReq.setRequestHeader("Content-Type", "application/json");
       qrReq.send(data);
       }
