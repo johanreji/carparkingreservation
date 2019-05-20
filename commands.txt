@@ -4,4 +4,22 @@ python manage.py runserver 0.0.0.0:8000
 2. 
 celery -A bookmyslot worker -l info -B
 
+3.
+#celery demon
+sudo supervisorctl status bookmyslotbeat
+sudo supervisorctl status bookmyslotworker
+/etc/supervisor/conf.d
+
+
+4.
+
+#nginx conf
+
+sudo nano /etc/nginx/sites-available/bookmyslot
+sudo systemctl restart nginx
+ sudo tail -30 /var/log/nginx/error.log
+
+
+#rename with prepend
+for f in * ; do mv -- "$f" "home_$f" ; done
 
