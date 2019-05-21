@@ -15,26 +15,32 @@ from django.db.models import Q
 import json
 import pytz
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from .forms import BookingSearchForm
+from django import forms
 
 # Create your views here.
 
 @csrf_exempt
 def searchslots(request):
     if(request.method=="POST"):
+        form = BookingSearchForm(request.POST)
+        if form.is_valid():
+          print("valid form")
+        else:
+          print("not valid")
+          return JsonResponse({"status":1,"message":form.errors})    
         print("request post data")
         print(str(request.POST))
-        indian=pytz.timezone('Asia/Kolkata')
-        #request_data=request.POST["data"]
-        start_date=request.POST["startdate"]
-        end_date=request.POST["enddate"]
-        start_time=request.POST["starttime"]
-        end_time=request.POST["endtime"]
-        start_datetime=start_date + ' ' + start_time 
-        start_datetime=datetime.strptime(start_datetime,"%Y-%m-%d %H:%M")
+        # request_data=request.POST["data"]
+        # start_date=request.POST["startdate"]
+        # end_date=request.POST["enddate"]
+        # start_time=request.POST["starttime"]
+        # end_time=request.POST["endtime"]
+        # start_datetime=start_date + ' ' + start_time 
+        # start_datetime=datetime.strptime(start_datetime,"%Y-%m-%d %H:%M")
+        start_datetime=form.cleaned_data["startdatetime"]
         start_datetime=start_datetime.astimezone(pytz.utc)
-        end_datetime=end_date + ' ' + end_time
-        end_datetime=datetime.strptime(end_datetime,"%Y-%m-%d %H:%M")
+        end_datetime = form.cleaned_data["enddatetime"]
         end_datetime=end_datetime.astimezone(pytz.utc)
 
         print(f"datetimes: st:  {start_datetime} et: {end_datetime}")

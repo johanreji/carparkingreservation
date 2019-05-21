@@ -2,4 +2,7 @@
 cnn/savedpics/
 cnn/segments/
 cnn/frames/
-
+celerybeat-schedule.bak
+celerybeat-schedule.dat
+celerybeat-schedule.dir
+accounts/__pycache__/
