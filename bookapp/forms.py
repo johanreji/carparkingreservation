@@ -34,3 +34,8 @@ class BookingSearchForm(forms.Form):
 		self.cleaned_data.update(startdatetime=start_datetime)
 		self.cleaned_data.update(enddatetime=end_datetime)
 
+
+class BookingForm(BookingSearchForm):
+	slotselected=forms.IntegerField()	
+	
+

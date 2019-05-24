@@ -8,6 +8,7 @@ from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from datetime import datetime, timedelta
 from django.db import transaction
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .models import Reservations
 from gridapp.models import Slots, SlotsCache
 from accounts.models import User
@@ -15,8 +16,9 @@ from django.db.models import Q
 import json
 import pytz
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import BookingSearchForm
-from django import forms
+from .forms import BookingSearchForm, BookingForm
+from django.db import IntegrityError
+from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
 
@@ -28,7 +30,7 @@ def searchslots(request):
           print("valid form")
         else:
           print("not valid")
-          return JsonResponse({"status":1,"message":form.errors})    
+          return JsonResponse({"status":2,"message":form.errors})    
         print("request post data")
         print(str(request.POST))
         # request_data=request.POST["data"]
@@ -56,6 +58,7 @@ def searchslots(request):
         print(list2)
         #print(avaliable_slots_list[0].slot_id)
         grid_dict={}
+        grid_dict["status"]=1
         booked_dict={}
         for i in booked_slots_list:
           booked_dict[i]=1;
@@ -67,27 +70,35 @@ def searchslots(request):
         print(grid_dict)    
         return JsonResponse(grid_dict) 
 
-    return JsonResponse({"status":1}) 
+    return JsonResponse({"status":3}) 
 
 class Bookslot(LoginRequiredMixin,View):
-    login_url = '/grid/getslots/html/'
+    login_url = '/'
     #redirect_field_name = 'redirect_to'
     def post(self, request):
         print("Entered book slot")
         print(str(request.POST))
-        indian=pytz.timezone('Asia/Kolkata')
-        current_slot_id = request.POST["slotselected"]
+        form=BookingForm(request.POST)
+        if form.is_valid():
+          print("valid")  
+        else:
+          messages.warning(request, 'form validation error please refresh and try again')
+          return redirect(reverse('gridapp:index'))
+
+        current_slot_id = form.cleaned_data["slotselected"]
         current_user = request.user
         current_slot = Slots.objects.get(slot_id=current_slot_id)
-        start_date=request.POST["sdate"]
-        end_date=request.POST["edate"]
-        start_time=request.POST["stime"]
-        end_time=request.POST["etime"]
-        start_datetime=start_date + ' ' + start_time 
-        start_datetime=datetime.strptime(start_datetime,"%Y-%m-%d %H:%M")
+        # start_date=request.POST["sdate"]
+        # end_date=request.POST["edate"]
+        # start_time=request.POST["stime"]
+        # end_time=request.POST["etime"]
+        # start_datetime=start_date + ' ' + start_time 
+        # start_datetime=datetime.strptime(start_datetime,"%Y-%m-%d %H:%M")
+        start_datetime=form.cleaned_data["startdatetime"]
         start_datetime=start_datetime.astimezone(pytz.utc)
-        end_datetime=end_date + ' ' + end_time
-        end_datetime=datetime.strptime(end_datetime,"%Y-%m-%d %H:%M")
+        # end_datetime=end_date + ' ' + end_time
+        # end_datetime=datetime.strptime(end_datetime,"%Y-%m-%d %H:%M")
+        end_datetime=form.cleaned_data["enddatetime"]
         end_datetime=end_datetime.astimezone(pytz.utc)
         print("start datetime: ", start_datetime, "enddattime: ", end_datetime)
         reservation_id=None
@@ -111,15 +122,18 @@ class Bookslot(LoginRequiredMixin,View):
                   amt=total_mins/60*10
                   amt=round(amt,2)
                   context={"slotselected":current_slot_id,"dst":start_datetime,"det":end_datetime,"amt":amt,
-                  "st":start_time, "et": end_time, "name":request.user.email, "rid":reservation_id}
+                  "st":form.cleaned_data["starttime"], "et": form.cleaned_data["endtime"], "name":request.user.email, "rid":reservation_id}
                   return render(request, "bookapp/confirm.html", context)
             else:
-                  return HttpResponse("seat already booked")
+                  messages.warning(request, 'Slot is booked by another person, Please try again')
+                  return redirect(reverse('gridapp:index'))
         except IntegrityError:
-            return HttpResponse({"status":1})
+             messages.error(request, 'Database error refresh and try again')
+             return redirect(reverse('gridapp:index'))
 
     def get(self, request):
-        return JsonResponse({"status":1})        
+        messages.error(request, 'Invalid request type')
+        return redirect(reverse('gridapp:index'))    
         
 
 @login_required
@@ -128,14 +142,19 @@ def confirmslot(request):
     print(str(request.POST))
     reservation_id=int(request.POST["rid"])
     payment= int(float(request.POST["amount"]))
-    current_reservation=Reservations.objects.get(reservation_id=reservation_id)
-    print(current_reservation)
-    if current_reservation:
+    try:
+      current_reservation=Reservations.objects.get(reservation_id=reservation_id)
+      print(current_reservation)
       current_reservation.confirmation=True;
       current_reservation.payment=payment
       current_reservation.save()
       return redirect("/bookings/mybookings")
-  return JsonResponse({"status":1})
+    except Reservations.DoesNotExist:
+      messages.warning(request, "Booking timed out, please try again")  
+      return redirect(reverse('gridapp:index'))
+  else:    
+    messages.error(request, 'Invalid request type')
+    return redirect(reverse('gridapp:index'))
 
 
 @login_required
@@ -154,7 +173,8 @@ def bookedslots(request):
     return render(request, "bookapp/userbookings.html",{"past":past_reservations,
         "future":future_reservations,"current":ongoing_reservations})
   else:
-    return JsonResponse({"status":1})
+    messages.error(request, 'Invalid request type')
+    return redirect(reverse('gridapp:index'))
 
 @login_required
 def cancelslot(request):

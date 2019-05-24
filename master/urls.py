@@ -15,7 +15,9 @@ urlpatterns = [
        url(r'getslots/', views.sendSlotDims, name='getslots'),
        url(r'addarea/(?P<reqtype>\w+)', views.addarea, name='addarea'),
        url(r'genslots/', views.generateSlots, name='genslots'),
-       
+       url(r'fetch/', views.fetch, name='fetch'),
+       url(r'save/', views.save, name='save'),
+       url(r'removeslot/', views.removeslot, name='removeslot')
 
 ]
 

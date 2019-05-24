@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from datetime import datetime, timedelta
 from django.conf import settings
@@ -9,12 +9,25 @@ from django.db import transaction
 from .models import ParkingAreas, SlotDims
 from gridapp.models import Slots, SlotsCache
 from bookapp.models import Reservations, PenaltyReservations
+from tempfile import NamedTemporaryFile
 from PIL import Image
 from django.db.models import Sum, Avg
 import json
 import pytz
+from .getImage import getImage
+from django.core.files import File
+from urllib.request import urlopen
 # BookingQueue = queue.Queue(10)
 # Create your views here.
+
+def getfilename():
+  try:
+    id=ParkingAreas.objects.latest('area_id')
+    return 'areas/{0}.jpg'.format(str(id))
+  except Exception:
+    id=0
+    return 'areas/{0}.jpg'.format(str(id))  
+
 @csrf_exempt
 def master(request):
   result = None
@@ -27,8 +40,8 @@ def master(request):
     print(slotimg.url)
     area=(query2.width, query2.height)
     print(result)
-    print("area", area)
-    print("url, ", slotimg.url)
+    # print("area", area)
+    # print("url, ", slotimg.url)
     return render(request, "master/master.html", {"result" : query ,"area":area, "slotimg":slotimg, "area_id":area_id})
   else:
     return render(request, "master/master.html", {"result" : None ,"area":None,})
@@ -75,15 +88,9 @@ def addslot(request):
     slotdims_obj=SlotDims.objects.create(area_id=ParkingAreas.objects.get(area_id=aid), x_left=x, y_left=y, width=width,
      height=height, row=row)
     slotdims_obj.save()
-    query2 = ParkingAreas.objects.order_by('-area_id')
-    query2=query2[0]
-    slotimg = query2.area_image
-    area_id = query2.area_id
-    query = SlotDims.objects.filter(area_id=area_id)
-    area=(query2.width, query2.height)
-    return render(request, "master/master.html", {"result" : query ,"area":area, "slotimg":slotimg,"area_id":area_id})
+    return JsonResponse({"status":True, "slot_id":slotdims_obj.pk, "x":x, "y":y, "width":width, "height":height, "row":row})
   else:
-    return JsonResponse({"status:"-1})
+    return JsonResponse({"status":False})
 
  
 
@@ -168,3 +175,39 @@ def addarea(request, reqtype="html"):
   # db.commit()
   # db.close()
 #   return render(request, "master.html", {"result" : result ,"area":area}) 
+
+
+@csrf_exempt
+def fetch(request):
+  filepath_prefix="/media/"
+  if(request.method=="GET"):
+    filepath=filepath_prefix + getfilename()
+    flag=getImage(filepath.strip('/'), 0)
+    return JsonResponse({"status":flag,"url":filepath})
+  return JsonResponse({"status":False})
+
+@csrf_exempt
+def save(request):
+  filepath="frame.jpg"
+  if(request.method=="POST"):
+    print(str(request.POST))
+    img=request.POST["url"]
+    name=request.POST["area_name"]
+    rows=request.POST["rows"]
+    new_area = ParkingAreas.objects.create(area_name=name,area_image="frame.jpg", row_count=rows)
+    new_area.save()
+    return JsonResponse({"url":new_area.area_image.url,"status":True,"aid":new_area.pk})
+  else:
+   return JsonResponse({"status":False})
+
+@csrf_exempt
+def removeslot(request):
+  if(request.method=="POST"):
+    slot_id = int(request.POST["slot_id"])
+    SlotDims.objects.get(slot_id=slot_id).delete()
+    return JsonResponse({"status":True}) 
+  else:
+    return JsonResponse({"status":False})    
+  
+
+    

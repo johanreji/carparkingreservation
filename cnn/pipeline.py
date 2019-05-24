@@ -20,8 +20,8 @@ import json
 keras.backend.clear_session()
 import mysql.connector
 
-CAMID = 1
-url="http://127.0.0.1:8000/getdata/"
+CAMID = 0
+url="http://127.0.0.1:80/getdata/"
 MODEL_NAME ='newmaycnn'
 WEIGHTS = 'newmaycnn_checkpoint.h5'
 DIMS = (1,64,64,3)
@@ -73,13 +73,13 @@ cnn = CNN(loaded_model_json)
 
 
 def sendSlotImage(img):
-    url = 'http://127.0.0.1:8000/master/addarea/program/'
+    url = 'http://127.0.0.1:80/master/addarea/program/'
     files = {'media': img}
     status = requests.post(url=url, files=files)
     return status
 
 def getSlotDims():
-    url2 = 'http://127.0.0.1:8000/master/getslots/'
+    url2 = 'http://127.0.0.1:80/master/getslots/'
     r = requests.get(url = url2, params = None) 
     if r.status_code == 200:
       res = r.json()

@@ -4,7 +4,7 @@ import time
         
 
 print(cv2.__version__)
-vidcap = cv2.VideoCapture(1)
+vidcap = cv2.VideoCapture(0)
 #vidcap.set(CV_CAP_PROP_BUFFERSIZE, 1);
 #success,image = vidcap.read()
 count = 0

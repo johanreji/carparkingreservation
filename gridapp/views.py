@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.utils import timezone
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
 from datetime import datetime, timedelta
 from django.http import JsonResponse
 from .models import Slots, SlotsCache
@@ -133,7 +134,8 @@ def getslots(request, restype):
             return JsonResponse(grid_dict) 
 
     else:
-    	return HttpResponse("error man")    
+        messages.error(request, 'Invalid request type')
+        return redirect(reverse('gridapp:index'))     
 
 # def getdata2(request):
 #   if(request.method=="POST"):
@@ -144,7 +146,7 @@ def getslots(request, restype):
 #     details=json.loads(data)
 
 
-@csrf_exempt
+#@csrf_exempt
 def qrscan(request):
   resdict={}
   if not request.user.is_authenticated:

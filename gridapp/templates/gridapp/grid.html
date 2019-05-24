@@ -17,6 +17,8 @@
     {% if noarea %}
     <h4 style="color:#ffffff">Please add an Area</h4>
     {% endif %}
+   
+  </div>  
   <div class="row">
   <form id="search" class="form-inline" action="{% url 'bookapp:searchslots' %}" method="POST">
     <!-- {% csrf_token %} -->
@@ -33,15 +35,21 @@
       </div>
     <input class="btn btn-primary" value="search" type="submit"/>
   </form>
+      <div class="alert alert-warning" role="alert" id="searchalert" style="display:none">
+         <button type="button" class="close" onclick="$('#searchalert').css('display','none')">&times;</button>
+         <div class="message">
+        This is a warning alert—check it out!
+        </div>
+      </div>
   </div>
   <div class="row top-buffer">
 
     <form id="bookform" action="{% url 'bookapp:bookslot' %}" method="POST">
       {% csrf_token %}
-      <input type="hidden" name="sdate" id="dst">
-      <input type="hidden"  name="edate" id="det">
-      <input type="hidden" name="stime" id="st">
-      <input type="hidden"  name="etime" id="et">
+      <input type="hidden" name="startdate" id="dst">
+      <input type="hidden"  name="enddate" id="det">
+      <input type="hidden" name="starttime" id="st">
+      <input type="hidden"  name="endtime" id="et">
       <input id="slotselected" type="hidden" name="slotselected" required="required">
       <!-- <input class="btn btn-primary" id="book-button" type="submit" value="Book selected Slot"> -->
     </form>
@@ -59,7 +67,7 @@
   <h4 class="font-weight-bold" id ="datetimedisplay" style="color: white;">"Here is the live parking lot status. Red is occupied, green is free. Specify date and search to find an open slot and book it"</h4>
   </div>
 </div>
-</div>
+<!-- </div> -->
 <!--   <button class="btn btn-primary" id="check-slots">Check Current Slot availability</button>
 </div> -->
 
@@ -157,11 +165,25 @@ function searchSlots(slotobj) {
         data: $('#search').serialize(), 
         dataType : 'json',
         success: function(response) { 
-         slotobj.setResultdict(response["avaliable"], startdate, enddate, starttime, endtime);
-         slotobj.change();
-         console.log(startdate + ' hehe ')
-         updateSlots(response["booked"]); 
-         updateSlots(response["avaliable"]); 
+         if(response["status"]==1){
+           slotobj.setResultdict(response["avaliable"], startdate, enddate, starttime, endtime);
+           slotobj.change();
+           $('#searchalert').hide();
+           console.log(startdate + ' hehe ')
+           updateSlots(response["booked"]); 
+           updateSlots(response["avaliable"]); 
+        }
+        else if(response["status"]==2){
+          let alertelm=$('#searchalert');
+          slotobj.disableBooking();
+          $("#datetimedisplay").html("")
+          $('.message', alertelm).html(response["message"]["__all__"]);
+          alertelm.css('display','block');
+        }
+        else{
+          alert("invalid request")
+        }
+        
        },
     });
    //} 
@@ -195,6 +217,7 @@ $( document ).ready(function() {
     $("#check-slots").click(function(event) {
         slotobj.disableBooking();
         slotobj.change();
+        $('#searchalert').hide();
         ajaxSlots();
     });
     $("#bookform").submit(function(event){

@@ -331,14 +331,16 @@ background: transparent;
 
 <div style="text-align: center;margin:0 20px;" class=" mainblock container-fluid fill">
   <!-- <div id ="contentblock" class=> -->
-    <div id = "booking_alert" { % if not alert % } style="display:none;" { % else % } style="display:block;" { endif }>
-       <div class="alert alert-info alert-dismissible">
-     <a class = "close" href = "#" onclick="closeAlertBox()">x</a>
-     <div id = "message" style="color:white;">
-      {{alert}}
+   <div class="row">
+      {% for message in messages %}
+      <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
       </div>
-    </div>  
-    </div>
+      {% endfor %}
+   </div>   
     {% block content %}
     {% endblock %}
 
