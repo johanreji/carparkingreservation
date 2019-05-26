@@ -23,3 +23,8 @@ sudo systemctl restart nginx
 #rename with prepend
 for f in * ; do mv -- "$f" "home_$f" ; done
 
+
+#gunicorn
+
+systemctl status gunicorn
+

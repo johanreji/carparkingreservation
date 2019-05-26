@@ -1,3 +1,5 @@
+#!/usr/bin/python3.6
+
 import threading
 import time
 import logging
@@ -21,9 +23,9 @@ keras.backend.clear_session()
 import mysql.connector
 
 CAMID = 0
-url="http://127.0.0.1:80/getdata/"
-MODEL_NAME ='newmaycnn'
-WEIGHTS = 'newmaycnn_checkpoint.h5'
+url="http://127.0.0.1:8000/getdata/"
+MODEL_NAME ='cnn/cnn.json'
+WEIGHTS = 'cnn/cnn.h5'
 DIMS = (1,64,64,3)
 globcount = 0
 flag = False
@@ -73,13 +75,13 @@ cnn = CNN(loaded_model_json)
 
 
 def sendSlotImage(img):
-    url = 'http://127.0.0.1:80/master/addarea/program/'
+    url = 'http://127.0.0.1:8000/master/addarea/program/'
     files = {'media': img}
     status = requests.post(url=url, files=files)
     return status
 
 def getSlotDims():
-    url2 = 'http://127.0.0.1:80/master/getslots/'
+    url2 = 'http://127.0.0.1:8000/master/getslots/'
     r = requests.get(url = url2, params = None) 
     if r.status_code == 200:
       res = r.json()
@@ -138,8 +140,9 @@ def sendData(pred, ts, idlist):
     global globcount 
     slot_dict={}
     for i in range(l):
-        slot_dict[idlist[i]]=str((pred[i][1] > pred[i][0]))
-        print("free %f occupied %f".format(pred[i][0], pred[i][1]))
+        slot_dict[idlist[i]]=str((pred[i][0] >= 0.5))
+        probs=f'probablity: {pred[i][0]:.5f}'
+        print(probs)
         # if(pred[i][0]>0.25 and pred[i][0]<0.75):
         # 	cv2.imwrite("tested/" + str(globcount)  + ".jpg", imglist2[i]) 
         	
@@ -189,7 +192,7 @@ def cropSlices(img, seglist):
             # rotated_roi=cv2.warpAffine(roi, M, (roi.shape[0], roi.shape[1]))
         imglist.append(roi)
         timeval=str(time.time())
-        cv2.imwrite("segments/" + str(piccount) + str(count) + ".jpeg", roi) 
+        cv2.imwrite("cnn/segments/" + str(piccount) + str(count) + ".jpeg", roi) 
         #y1_prev=y1
     return imglist, count   
 

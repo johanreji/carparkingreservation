@@ -73,7 +73,7 @@ def getdata(request):
 def getslots(request, restype):
     if(request.method=="GET"):
         slot_list = Slots.objects.order_by('slot_id')
-        query2 = ParkingAreas.objects.order_by('-area_id')
+        query2 = ParkingAreas.objects.filter(is_active=True).order_by('-area_id')
         if not query2:
           return render(request, "gridapp/grid.html", {"result":None, "st":timezone.now(), "area":None, "centertext":None,"noarea":"Please add an area"})
         maxrow=SlotDims.objects.all().aggregate(Max('row'))['row__max']  

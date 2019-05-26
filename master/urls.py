@@ -17,7 +17,8 @@ urlpatterns = [
        url(r'genslots/', views.generateSlots, name='genslots'),
        url(r'fetch/', views.fetch, name='fetch'),
        url(r'save/', views.save, name='save'),
-       url(r'removeslot/', views.removeslot, name='removeslot')
+       url(r'removeslot/', views.removeslot, name='removeslot'),
+       url(r'start/', views.startcnn.as_view(), name='start'),
 
 ]
 

@@ -236,7 +236,7 @@ nav.subbar > ul.nav.nav-tabs > li.active > a {
 
 			<div class="navbar-header">
 
-				<a href="/master/master" class="navbar-brand">
+				<a href="{% url 'gridapp:index' %}" class="navbar-brand">
 					<span class="visible-xs">BMS</span>
 					<span class="hidden-xs">Book My Slot</span>
 				</a>
@@ -257,10 +257,10 @@ nav.subbar > ul.nav.nav-tabs > li.active > a {
 							<i class="fa fa-user"></i>
 						</button>
 						<ul class="dropdown-menu">
-							<li><a href="#">Change Password</a></li>
+							<li><a href="{% url 'admin:index' %}">Admin Page</a></li>
 
 							<li class="nav-divider"></li>
-							<li><a href="#">Logout</a></li>
+							<li><a href="{% url 'gridapp:index' %}">Home Page</a></li>
 						</ul>
 					</li>
 
@@ -302,7 +302,7 @@ nav.subbar > ul.nav.nav-tabs > li.active > a {
 	                               	</h5>
 	                               </span>
 	                           </div>
-
+	                         
 	                           <div id="svgcontent" class="panel-body">
 									 <svg id="slotsvg" class="bg"   width="{{area.0}}" height="{{area.1}}" style="margin:20px auto; display: block; overflow:visible;" >
 									{% for item in result %}
@@ -314,30 +314,51 @@ nav.subbar > ul.nav.nav-tabs > li.active > a {
 
 									</svg> 
 	                           </div>
+	                           
 	                       </div>
 	                   </div>
 
 	                   <div class="col-xs-12">
 	                       <div class="panel panel-default">
 	                           <div class="panel-heading">
-	                             
+	                             Slot Generation
 	                           </div>
 
 	                           <div class="panel-body">
+	                           	<p>When you have finished adding slots press this button to render them to grid</p>
+	                           	<p>If you have done updates also click this button to add updates note that
+	                           	currently updating will clear all slots and reservatins</p>
 	                           	<form action="{% url 'master:genslots' %}" method="get">
-	                           		<input type="Submit" value="Generate Slots">
+	                           		<input type="submit" class="btn btn-secondary" value="Generate Slots">
 	                           	</form>
 							   </div>	 
 	                       </div>
 	                   </div>
-	                   
+	                     <div class="col-xs-12">
+	                       <div class="panel panel-default">
+	                       	<div class="panel-heading">
+	                             CNN Scanner Status
+	                           </div>
+	                           <div class="panel-body">
+                                  <p id="livestatus"></p>
+	                              <button id="startcnn" class=" btn btn-success cnncontrol">Start CNN</button>
+	                              <button id="stopcnn" class="btn btn-warning cnncontrol">Stop CNN</button>
+	                              <button id="checkcnn" class="btn btn-info cnncontrol">Check Live Status</button>
+	                           </div>
+
+	                           <div class="panel-body">
+	                           	
+							   </div>	 
+	                       </div>
+	                   </div>
+
 	                   <div class="col-xs-12">
 	                       <div class="panel panel-default">
 	                           <div class="panel-heading">
 	                               Slot Info
 	                           </div>
 	                           <div class="panel-body">
-	                           	
+	                           	 
 	                              <table id="slottable" class="table table-striped">
 							        <thead>
 							          <tr><th>Slot ID</th><th>X</th><th>Y</th><th>Width</th><th>Height</th><th></th></tr>
@@ -349,6 +370,7 @@ nav.subbar > ul.nav.nav-tabs > li.active > a {
 							         	{%endfor%}
 							        </tbody>
 							      </table>
+							    
 	                           </div>
 	                       </div>
 	                       
@@ -362,7 +384,7 @@ nav.subbar > ul.nav.nav-tabs > li.active > a {
 	           <section class="tab-pane fade in content" id="slot">
 
 
-
+	           			
 		             	  <div class="row">
 	                   <div class="col-xs-12">
 	                       <div class="panel panel-default">
@@ -402,35 +424,54 @@ nav.subbar > ul.nav.nav-tabs > li.active > a {
 	                              Add Slot Details
 	                           </div>
 	                           <div class="panel-body">
-									<form id="slotform" action="{% url 'master:addslot' %}" method="POST" enctype="multipart/form-data">
-										<label>Slot ID</label>
-										<input type="text" name="slotid">
-										<label>X value</label>
-										<input id="x" type="text" name="x">
-										<label>Y value</label>
-										<input id="y"  type="text" name="y">
-										<label>Slot width</label>
-										<input id="w"  type="text" name="width">
-										<label>Slot height</label>
-										<input id="h"  type="text" name="height">
-										<label>Row</label>
-										<input id="h"  type="number" name="row">
+									<form id="slotform" action="{% url 'master:addslot' %}" method="POST" enctype="multipart/form-data" class="was-validated">
+										<!-- <div class="form-group"> -->
+											<!-- <label>Slot ID</label> -->
+											<input type="hidden" class="form-control-sm" name="slotid">
+									    <!-- </div> -->
+									    <div class="form-group">
+											<label>X value</label>
+											<input id="x" type="text" class="form-control-sm" name="x" required>
+											<!-- <div class="valid-feedback"></div>
+    										<div class="invalid-feedback">Please fill out this field.</div> -->
+									    </div>
+									    <div class="form-group">
+											<label>Y value</label>
+											<input id="y"  type="text" class="form-control-sm" name="y" required>
+											<!-- <div class="valid-feedback"></div>
+    										<div class="invalid-feedback">Please fill out this field.</div> -->
+										</div>
+										<div class="form-group">
+											<label>Slot width</label>
+											<input id="w"  type="text" class="form-control-sm" name="width" required>
+											<!-- <div class="valid-feedback"></div>
+    										<div class="invalid-feedback">Please fill out this field.</div> -->
+										</div>
+										<div class="form-group">	
+											<label>Slot height</label>
+											<input id="h"  type="text" class="form-control-sm" name="height" required>
+											<!-- <div class="valid-feedback"></div>
+    										<div class="invalid-feedback">Please fill out this field.</div> -->
+										</div>
+										<div class="form-group">
+											<label>Row Number</label>
+											<input id="h"  type="number" class="form-control-sm" name="row" required>
+											<!-- <div class="valid-feedback"></div>
+    										<div class="invalid-feedback">Please fill out this field.</div> -->
+										</div>
 										<input id="a"  type="hidden" value="{{area_id}}" name="aid">
-										<input type="submit" >
+										<input type="submit" class="btn btn-success">
 									</form>
 
 	                           </div>
 	                       </div>
-	                   </div>
-	                   
-
-	                   
+	                   </div> 
 	               </div>
+	       
 		            
 	           </section>
 	           <section class="tab-pane  fade in content" id="area">
-	           	
-
+	          
   	                <div class="row">
 
 	                   
@@ -469,9 +510,11 @@ nav.subbar > ul.nav.nav-tabs > li.active > a {
 								  <input  id="h1"  type="text" name="height">
 								  <input type="submit" >
 								</form> -->
+								
 								<div class="col-xs-12">
-								  <img id="currimage" src="{{slotimg.url}}" class="responsive">
+								  <img id="currimage" {% if slotimg %} src="{{slotimg.url}}" {% else %} alt="No image found please fetch one" {% endif %} class="responsive">
 								</div>
+								
 
 	                           </div>
 	                       </div>
@@ -482,23 +525,20 @@ nav.subbar > ul.nav.nav-tabs > li.active > a {
 	                    <div class="col-xs-12">
 	                       <div class="panel panel-default">
 	                           <div class="panel-heading">
-	                              <button id="fetchBtn">Fetch Live Image</button>
+	                              <button id="fetchBtn" class="btn btn-primary">Fetch Live Image</button>
 	                           </div>
 	                           <div class="panel-body">
-	                              	<!-- <div class="col-xs-12">
-								  		<img id="liveimage" src="" class="responsive">
-									</div> -->
+	                              	
 									<div class="col-xs-12">
-								  	<form id="addarea" method="post" enctype="multipart/form-data" action="
-	                              	master/save/">
+								  	<form class="form-inline" id="addarea" method="post" enctype="multipart/form-data" action="master/save/">
 	                              	{% csrf_token %}
-   										 <label>Area name</label>
-								         <input id="w1"  type="text" name="area_name" required="true">
-									     <label>Row count</label>
-								 		 <input  id="h1"  type="number" name="rows" required="true">
+   										 <label for="area_name">Area name :</label>
+								         <input id="w1" class="form-control" type="text" name="area_name" required="true">
+									     <label for="rows">Row count : </label>
+								 		 <input class="form-control"  id="h1"  type="number" name="rows" required="true">
 								 		 <input type="hidden" name="url" id="imgurl">
-   										 <input type="submit" value="Add new Area">
-   										 <input type="button" id="cancelfetch" value="Cancel">
+   										 <input type="submit" value="Add new Area" class="btn btn-success">
+   										 <input type="button" id="cancelfetch" value="Cancel" class="btn btn-danger">
 
  									</form>
 									</div>
@@ -531,11 +571,17 @@ $( document ).ready(function() {
 	var imgurl;
 	var cropper;
 	var previmage;
+	var svgwidth=null;
+	var svgheight=null;
+	{% if area_id %}
+	svgwidth={{area.0}}
+	svgheight={{area.1}}
 	var path=$('#image').attr('src')
 	if(path!==""){
 		img=document.getElementById('image')
 		cropper=createcropper(img)
 	}
+	{% endif %}
 	$('#addarea').hide()
 	$('#saveBtn').hide()
 	$('#fetchBtn').click(function(){
@@ -578,13 +624,22 @@ $( document ).ready(function() {
         success:function(data){
         	if(data["status"]){
           	$('#image').attr('src',data["url"])
+          	svgwidth=data["width"]
+          	svgheight=data["height"]
+          	if(cropper){
+          		cropper.destroy()
+          		cropper=null;
+          		$('.cropper-container').remove()
+          		img=document.getElementById('image')
+          		cropper=createcropper(img)
+          	}
           	$('#a').attr('value', data["aid"])
           	alert("area added succesfully")
           	const image = document.getElementById("image")
           	cropper=createcropper(image)
           	$("#slottable tbody").empty()
-          	$('#slotsvg').empty()
-          	$('#slotsvg2').empty()
+          	$('#slotsvg').empty().attr('width', data["width"]).attr('height', data["height"])
+          	$('#slotsvg2').empty().attr('width', data["width"]).attr('height', data["height"])
           	$('#addarea').hide()
 
           }
@@ -622,6 +677,44 @@ $( document ).ready(function() {
        },
     });
     })
+	$(".cnncontrol").click(function(event){
+		op=$(this).attr('id');
+		 $.ajax({
+        type: 'GET',
+        data: {"op":op,} ,
+        dataType : 'json',
+        url: "{% url 'master:start' %}",
+        success: function(response) { 
+        	if(response["status"]==1){
+	        	$("#startcnn").attr("disabled", true)
+	        	$("#stopcnn").attr("disabled", false)
+	        	$("#livestatus").text(response["message"])
+	        }	
+	        else if(response["status"]==2){
+	        	$("#startcnn").attr("disabled", false)
+        	    $("#stopcnn").attr("disabled", true)
+        	    $("#livestatus").text(response["message"])
+        	}    
+	        else{    	
+        	 $("#livestatus").text(response["message"])
+        }	}
+	});
+	});
+
+	// 	$("#stopcnn").click(function(event){
+	// 	 $.ajax({
+ //        type: 'GET',
+ //        data: {"op":"stop",} ,
+ //        dataType : 'json',
+ //        url: "{% url 'master:start' %}",
+ //        success: function(response) { 
+ //        	alert("cnn scan stoped")
+ //        	console.log(response)
+        	
+ //        }	
+	// });
+	// });
+
 
 	$("#slotform").submit(function(event){
     event.preventDefault();
@@ -664,20 +757,21 @@ $( document ).ready(function() {
 	});	 
 
 	$("#cancelfetch").click(function() {
-	$('#currimage').attr('src', previmage);	
-    $("#addarea").find("input[type=text], textarea, input[type=number]").val("");
+	if(previmage){
+		$('#currimage').attr('src', previmage);	
+    	$("#addarea").find("input[type=text], textarea, input[type=number]").val("");
+    	$("#addarea").hide();
+	}
+	else{
+		alert("No previous image found")
+	}
 });  
-
-
-
-
- });
 
 function createcropper(image){
 return new Cropper(image, {
   zoomable:false,
-    minContainerWidth: {{area.0}},
-  minContainerHeight: {{area.1}},
+    minContainerWidth: svgwidth,
+  minContainerHeight: svgheight,
   crop(event) {
     console.log(event.detail.x);
     document.getElementById("x").value=event.detail.x;
@@ -693,6 +787,11 @@ return new Cropper(image, {
 });
 
 }
+
+
+
+ });
+
 
 	
 $(document).on("click",".sidebar-toggle",function(){
