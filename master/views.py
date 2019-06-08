@@ -132,16 +132,18 @@ def generateSlots(request):
           s=Slots.objects.create(slot_id=i.slot_id, occupied=False, cnn_timestamp=current_datetime)
           s1=SlotsCache.objects.create(slot_id=s, reservation_id=None, end_time=None)
         message="Slots are generated please view home page"
+        query.update(updated=True)
         if(cache.get('cnnstatus')==True):
           os.kill(cache.get('pid'), signal.SIGKILL)
           proc=subprocess.Popen(["cv/bin/python", "cnn/pipeline.py"])
+          cache.set('pid', proc.pid)
         return render(request, "master/master.html", {"result" : query ,"message":message,"area":area, "slotimg":slotimg,"area_id":area_id})  
       else:
         message="Please crop some slots"
-        return render(request, "master/master.html", {"result" : query ,"area":area,"slotimg":slotimg,"message":message})
+        return render(request, "master/master.html", {"result" : None ,"area":area,"slotimg":slotimg,"message":message})
     else:
       message="Please upload area and crop slots"
-      return render(request, "master/master.html", {"result" : query ,"area":None,message:"message"})
+      return render(request, "master/master.html", {"result" : None ,"area":None,message:"message"})
 
 @csrf_exempt
 @staff_member_required
@@ -204,8 +206,10 @@ def fetch(request):
   filepath_prefix="/media/"
   if(request.method=="GET"):
     filepath=filepath_prefix + getfilename()
+    print("filepath is ", filepath)
     flag=getImage(filepath.strip('/'), 0)
-    return JsonResponse({"status":flag,"url":filepath})
+    cache_breaker=datetime.now()  # to force removal of cached image
+    return JsonResponse({"status":flag,"url":filepath,"cache_breaker":f"?{cache_breaker}"})
   return JsonResponse({"status":False})
 
 @csrf_exempt
@@ -228,7 +232,10 @@ def save(request):
 def removeslot(request):
   if(request.method=="POST"):
     slot_id = int(request.POST["slot_id"])
-    SlotDims.objects.get(slot_id=slot_id).delete()
+    slotdimobj = SlotDims.objects.get(slot_id=slot_id)
+    if(slotdimobj.updated==True):
+    	Slots.objects.get(slot_id=slot_id).delete()
+    slotdimobj.delete()	
     return JsonResponse({"status":True}) 
   else:
     return JsonResponse({"status":False})   
@@ -242,7 +249,8 @@ class startcnn(LoginRequiredMixin, UserPassesTestMixin,View):
       if(request.GET["op"]=="startcnn"):  
         pid=None
         if(cache.get('cnnstatus')==False):
-          proc=subprocess.Popen(["cv/bin/python", "cnn/pipeline.py"])
+          print("check flow")
+          proc=subprocess.Popen(["cv/bin/python3", "cnn/pipeline.py"])
           print(proc)
           print(proc.pid)
           cache.set('cnnstatus', True)

@@ -32,6 +32,7 @@ class SlotDims(models.Model):
 	width = models.IntegerField()
 	height = models.IntegerField()
 	row = models.IntegerField()
+	updated = models.BooleanField(default=False)
 
 
 

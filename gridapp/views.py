@@ -92,7 +92,7 @@ def getslots(request, restype):
         centertext=(halfwidth-10, halfheight-halfheight/(2*maxrow))
         area=(query2.width + maxcolumn*10, query2.height + maxrow*10, width, height)
         print("area_id",area_id)
-        slot_dims = SlotDims.objects.filter(area_id__area_id=area_id).order_by('row')
+        slot_dims = SlotDims.objects.filter(area_id__area_id=area_id, updated=True).order_by('row')
         print("slotdims", slot_dims)
 
         print("slot_list", slot_list)
@@ -146,7 +146,7 @@ def getslots(request, restype):
 #     details=json.loads(data)
 
 
-#@csrf_exempt
+@csrf_exempt
 def qrscan(request):
   resdict={}
   if not request.user.is_authenticated:

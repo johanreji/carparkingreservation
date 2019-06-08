@@ -596,9 +596,11 @@ $( document ).ready(function() {
           if(data["status"]){
           	imgurl=data["url"]
           	previmage=$('#currimage').attr('src')
-          	$('#currimage').attr('src',data["url"])
+          	$('#currimage').attr('src',data["url"]+data["cache_breaker"])
+          	$('')
           	$('#addarea').show()
           	$('#saveBtn').show()
+          	console.log("check")
           }
           else{
           	alert("Please make sure camera is connected properly")
@@ -652,8 +654,9 @@ $( document ).ready(function() {
 
 	});	
 
-	   $(".remslot").click(function(event){
+	   $("#slottable").on('click', '.remslot', function(event){
       slot_id=$(this).attr('id');
+      console.log("event triggered")
       $.ajax({
         type: 'POST',
         url: "{% url 'master:removeslot' %}",
@@ -663,11 +666,11 @@ $( document ).ready(function() {
          let status=response["status"]
          if(status==true){
          	console.log(slot_id)
-           $("#r"+ slot_id).remove()
-           $("#t"+ slot_id).remove()
+           $("#slotsvg #r"+ slot_id).remove()
+           $("#slotsvg #t"+ slot_id).remove()
            $("#row"+ slot_id).remove()
-           $("#r2"+ slot_id).remove()
-           $("#t2"+ slot_id).remove()
+           $("#slotsvg2 #r2"+ slot_id).remove()
+           $("#slotsvg2 #t2"+ slot_id).remove()
            $("#row"+ slot_id).remove()
            console.log("removed item")
          }
@@ -736,8 +739,8 @@ $( document ).ready(function() {
 									<text id="t${slot_id}" x="${x}" y="${y}" font-size="25" fill="black"> ${slot_id} </text>
 									</g>`
 			var gridmarkup2=`<g>
-									  <rect id="r${slot_id}" x="${x}" y="${y}" width="${width}" height="${height}" fill-opacity='0.3'  style="stroke-width:3;stroke:rgb(0,0,0); fill: green;"></rect>
-									<text id="t${slot_id}" x="${x}" y="${y}" font-size="25" fill="black"> ${slot_id} </text>
+									  <rect id="r2${slot_id}" x="${x}" y="${y}" width="${width}" height="${height}" fill-opacity='0.3'  style="stroke-width:3;stroke:rgb(0,0,0); fill: green;"></rect>
+									<text id="t2${slot_id}" x="${x}" y="${y}" font-size="25" fill="black"> ${slot_id} </text>
 									</g>`								
 
           	$("#slottable tbody").append(markup);
