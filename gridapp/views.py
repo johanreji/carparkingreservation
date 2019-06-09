@@ -8,7 +8,7 @@ from django.contrib import messages
 from datetime import datetime, timedelta
 from django.http import JsonResponse
 from .models import Slots, SlotsCache
-from master.models import  SlotDims, ParkingAreas
+from master.models import  SlotDims, ParkingAreas, RenderDims
 from bookapp.models import Reservations
 import json
 import pytz
@@ -76,25 +76,25 @@ def getslots(request, restype):
         query2 = ParkingAreas.objects.filter(is_active=True).order_by('-area_id')
         if not query2:
           return render(request, "gridapp/grid.html", {"result":None, "st":timezone.now(), "area":None, "centertext":None,"noarea":"Please add an area"})
-        maxrow=SlotDims.objects.all().aggregate(Max('row'))['row__max']  
+        # maxrow=SlotDims.objects.all().aggregate(Max('row'))['row__max']  
         print("max row")
         count=Slots.objects.count()
         if count <1:
           return render(request, "gridapp/grid.html", {"result":None, "st":timezone.now(), "area":None, "centertext":None,"noarea":"Please generate slots from admin page"})
         query2=query2[0]
-        area=(query2.width, query2.height)
+        # area=(query2.width, query2.height)
         area_id=query2.area_id
-        height = min(area[1]/maxrow - 10*maxrow,75)
-        maxcolumn=count/maxrow
-        width=min(area[0]/maxrow - 10*maxcolumn, 50)
+        height = 75
+        height=(height/query2.height)*700
+        width= 50
+        width=(width/query2.width)*500
         halfheight=int(height/2)
         halfwidth=int(width/2)
-        centertext=(halfwidth-10, halfheight-halfheight/(2*maxrow))
-        area=(query2.width + maxcolumn*10, query2.height + maxrow*10, width, height)
+        centertext=(halfwidth-10, halfheight-10)
+        area=(400, 700, width, height)
         print("area_id",area_id)
-        slot_dims = SlotDims.objects.filter(area_id__area_id=area_id, updated=True).order_by('row')
-        print("slotdims", slot_dims)
-
+        # slot_dims = SlotDims.objects.filter(area_id__area_id=area_id, updated=True).order_by('row')
+        render_dims=RenderDims.objects.all()
         print("slot_list", slot_list)
         if restype=="html":
             grid_dict = {} #list of tuples of format (id, occupied)
@@ -103,25 +103,31 @@ def getslots(request, restype):
                     grid_dict[slot.slot_id]=(1,)
                 else:
                     grid_dict[slot.slot_id]=(0,)
+            for dim in render_dims:
+                sid=dim.slot_id
+                xpos=dim.x_left
+                ypos=dim.y_left
+                gs = grid_dict[sid]
+                grid_dict[sid] = gs + (ypos, xpos)         
 
-            print(grid_dict)
-            startrow=1
-            xpos=10
-            ypos=10
+            # print(grid_dict)
+            # startrow=1
+            # xpos=10
+            # ypos=10
             
-            incheight=height +10
-            incwidth=width + 10
+            # incheight=height +10
+            # incwidth=width + 10
             
-            for dim in slot_dims:
-              sid=dim.slot_id
-              if(dim.row>startrow):
-                xpos=10
-                ypos+=incheight
-                startrow=dim.row
-              gs=grid_dict[sid]  
-              grid_dict[sid]=gs+ (xpos,ypos)
-              xpos+=incwidth
-            print(grid_dict)  
+            # for dim in slot_dims:
+            #   sid=dim.slot_id
+            #   if(dim.row>startrow):
+            #     xpos=10
+            #     ypos+=incheight
+            #     startrow=dim.row
+            #   gs=grid_dict[sid]  
+            #   grid_dict[sid]=gs+ (xpos,ypos)
+            #   xpos+=incwidth
+            # print(grid_dict)  
             return render(request, "gridapp/grid.html", {"result":grid_dict, "st":timezone.now(), "area":area, "centertext":centertext})
         else:
             grid_dict={}

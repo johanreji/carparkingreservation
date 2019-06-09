@@ -8,12 +8,12 @@ from datetime import datetime, timedelta
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.db import transaction
-from .models import ParkingAreas, SlotDims
+from .models import ParkingAreas, SlotDims, RenderDims
 from gridapp.models import Slots, SlotsCache
 from bookapp.models import Reservations, PenaltyReservations
 from tempfile import NamedTemporaryFile
 from PIL import Image
-from django.db.models import Sum, Avg
+from django.db.models import F, Sum, FloatField, Avg, Min, Max
 import json
 import pytz
 from .getImage import getImage
@@ -98,8 +98,9 @@ def addslot(request):
     width=int(float(request.POST["width"]))
     height=int(float(request.POST["height"]))
     row=int(request.POST["row"])
+    column=int(request.POST["column"])
     slotdims_obj=SlotDims.objects.create(area_id=ParkingAreas.objects.get(area_id=aid), x_left=x, y_left=y, width=width,
-     height=height, row=row)
+     height=height, row=row, column=column)
     slotdims_obj.save()
     return JsonResponse({"status":True, "slot_id":slotdims_obj.pk, "x":x, "y":y, "width":width, "height":height, "row":row})
   else:
@@ -126,11 +127,36 @@ def generateSlots(request):
         Reservations.objects.all().delete()
         SlotsCache.objects.all().delete()
         Slots.objects.all().delete()
+        RenderDims.objects.all().delete()
         current_datetime=datetime.now()
         current_datetime=current_datetime.astimezone(pytz.utc)
+        numrows = recentobj.row_count
+        numcols = recentobj.column_count
+        rowdict= {}
+        columndict = {}
+        maxthreshold=700
+        currthreshold = area[1]
+        columnthreshold = area[0]
+        print("columnthreshold", columnthreshold)
+        maxcolthreshold = 500
+
+        for i in range(1, numrows+1):
+          rowaverage = query.filter(row=i).annotate(maxcount=Max('y_left'), mincount=Min('y_left'))
+          currpos = (rowaverage[0].maxcount + rowaverage[0].mincount)/2
+          rowdict[i]= (currpos/currthreshold)*maxthreshold
+
+        for i in range(1, numcols+1):
+          columnaverage = query.filter(column=i).annotate(maxcount=Max('x_left'), mincount=Min('x_left'))
+          currpos = (columnaverage[0].maxcount + columnaverage[0].mincount)/2  
+          print("currposs ", currpos)
+          columndict[i]=(currpos/columnthreshold)*maxcolthreshold
+          print("columdicti ",columndict[i])
+        count = 1
         for i in query:
-          s=Slots.objects.create(slot_id=i.slot_id, occupied=False, cnn_timestamp=current_datetime)
+          s=Slots.objects.create(slot_id=count, occupied=False, cnn_timestamp=current_datetime)
           s1=SlotsCache.objects.create(slot_id=s, reservation_id=None, end_time=None)
+          s2=RenderDims.objects.create(slot_id=count, x_left=rowdict[i.row], y_left=columndict[i.column])
+          count += 1
         message="Slots are generated please view home page"
         query.update(updated=True)
         if(cache.get('cnnstatus')==True):
@@ -221,7 +247,8 @@ def save(request):
     img=request.POST["url"]
     name=request.POST["area_name"]
     rows=request.POST["rows"]
-    new_area = ParkingAreas.objects.create(area_name=name,area_image=img.replace('/media/', ''), row_count=rows)
+    columns=request.POST["columns"]
+    new_area = ParkingAreas.objects.create(area_name=name,area_image=img.replace('/media/', ''), row_count=rows, column_count=columns)
     new_area.save()
     return JsonResponse({"url":new_area.area_image.url,"status":True,"aid":new_area.pk, "width":new_area.width, "height":new_area.height})
   else:
@@ -262,7 +289,7 @@ class startcnn(LoginRequiredMixin, UserPassesTestMixin,View):
           info=os.kill(cache.get('pid'), signal.SIGKILL)
           cache.set('cnnstatus', False)
           
-        return JsonResponse({"status":2, "info":info, "message":"CNN camera scanning stopped"})
+        return JsonResponse({"status":2, "info":None, "message":"CNN camera scanning stopped"})
       else:
         if cache.get('pid') and cache.get('cnnstatus'):
           return JsonResponse({"status":3, "message":"CNN camera scanning currently running"})

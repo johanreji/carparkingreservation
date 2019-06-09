@@ -19,6 +19,7 @@ class ParkingAreas(models.Model):
 	area_name = models.CharField(max_length=20, null=True)
 	area_image = models.ImageField(upload_to=user_directory_path, height_field='height', width_field='width')
 	row_count = models.IntegerField(null=True)
+	column_count = models.IntegerField(null=True)
 	is_active = models.BooleanField(default=False)
 
 class SlotDims(models.Model):
@@ -32,7 +33,15 @@ class SlotDims(models.Model):
 	width = models.IntegerField()
 	height = models.IntegerField()
 	row = models.IntegerField()
+	column = models.IntegerField()
 	updated = models.BooleanField(default=False)
+
+class RenderDims(models.Model):
+	slot_id = models.IntegerField(primary_key=True)
+	x_left = models.IntegerField()
+	y_left = models.IntegerField()
+	
+
 
 
 
